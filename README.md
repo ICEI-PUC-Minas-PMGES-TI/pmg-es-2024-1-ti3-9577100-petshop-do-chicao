@@ -1,18 +1,23 @@
-# [Nome do projeto]
+# Petshop do Chicão
 
-[Escreva um ou dois  parágrafo resumindo o objetivo do seu projeto.]
+A falta de um sistema de gerenciamento interno abrangente estava tendo um impacto significativo nos resultados do Petshop do Chicão. A perda de vendas devido à falta de produtos em estoque estava afetando diretamente a receita da empresa, enquanto a dificuldade em manter registros precisos de clientes estava prejudicando a fidelização e a satisfação do cliente.
+
+Erros manuais, perda de vendas devido à falta de produtos em estoque, dificuldade em manter registros precisos de clientes e suas necessidades, além de limitar a capacidade de análise para o crescimento e melhoria do petshop.
+
+
 
 ## Alunos integrantes da equipe
 
-* [Nome completo do aluno 1]
-* [Nome completo do aluno 2]
-* [Nome completo do aluno 3]
-* [Nome completo do aluno 4]
+* André Teiichi Santos Hyodo
+* Arthur Zagnoli
+* Gustavo Pereira
+* Luiz Felipe Campos
+* Marcus Vinícius Carvalho
 
 ## Professores responsáveis
 
-* [Nome completo do professor 1]
-* [Nome completo do professor 2]
+* Michelle Hanne Soares de Andrade
+* Joana Gabriela Ribeiro de Souza
 
 ## Instruções de utilização
 
