@@ -90,6 +90,69 @@ app.delete('/clientes/:id', (req, res) => {
     });
 });
 
+app.post('/pets', (req, res) => {
+    const { nome, especie, raca, observacoes } = req.body;
+    const sql = 'INSERT INTO pets (nome, especie, raca, observacoes) VALUES (?, ?, ?, ?)';
+    db.query(sql, [nome, especie, raca, observacoes], (err, result) => {
+        if (err) {
+            console.error('Erro ao cadastrar pet:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(201).json({ message: 'Pet cadastrado com sucesso!' });
+    });
+});
+
+app.get('/pets', (req, res) => {
+    const sql = 'SELECT * FROM pets';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar pets:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json(results);
+    });
+});
+
+app.get('/pets/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'SELECT * FROM pets WHERE id = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Erro ao buscar pet:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Pet não encontrado' });
+        }
+        return res.status(200).json(result[0]);
+    });
+});
+
+app.put('/pets/:id', (req, res) => {
+    const { id } = req.params;
+    const { nome, especie, raca, observacoes } = req.body;
+    const sql = 'UPDATE pets SET nome = ?, especie = ?, raca = ?, observacoes = ? WHERE id = ?';
+    db.query(sql, [nome, especie, raca, observacoes, id], (err, result) => {
+        if (err) {
+            console.error('Erro ao atualizar pet:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json({ message: 'Pet atualizado com sucesso!' });
+    });
+});
+
+app.delete('/pets/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM pets WHERE id = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Erro ao excluir pet:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json({ message: 'Pet excluído com sucesso!' });
+    });
+});
+
 app.listen(8081, () => {
     console.log(`Server is running on port 8081.`);
 });
