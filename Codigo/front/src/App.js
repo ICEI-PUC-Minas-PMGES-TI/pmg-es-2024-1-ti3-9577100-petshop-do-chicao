@@ -1,11 +1,12 @@
-
 import './App.css';
 import Login from './Login';
+import ClientForm from './componentes/ClientForm';
 
 function App() {
   return (
     <div className="App">
-     <Login />
+      <Login/>
+      <ClientForm/>
     </div>
   );
 }
