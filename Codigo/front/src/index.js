@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from "./Login";
-import Cadastro_pets from "./Pages/Cadastro pets/Cadastro_pets";
+import ClientForm from './componentes/ClientForm';
 import reportWebVitals from './reportWebVitals';
 import {
     createBrowserRouter, RouterProvider,
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
         element: <Login />,
     },
     {
-        path: "/cadastroPets",
-        element: <Cadastro_pets />,
+        path: "/clientes",
+        element: <ClientForm />,
     }
 ]);
 
