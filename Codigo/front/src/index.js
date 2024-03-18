@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Login from "./Login";
+import Login from "./Pages/Login/Login";
 import ClientForm from './componentes/ClientForm';
 import reportWebVitals from './reportWebVitals';
 import {
