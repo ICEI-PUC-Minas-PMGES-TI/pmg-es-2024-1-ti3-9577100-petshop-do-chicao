@@ -19,12 +19,8 @@ function CadastroPets() {
             <div>
                 <form onSubmit={handleSubmit} title="CadastroPets">
                     <div>
-                        <label htmlFor='nome'>Nome de usuário</label>
+                        <label htmlFor='nome'>Nome do Pet</label>
                         <input type='text' placeholder='Insira seu nome de usuário' /*onChange={ u => setUsername(u.target.value)}*//>
-                    </div>
-                    <div>
-                        <label htmlFor='senha'>Senha</label>
-                        <input type='password' placeholder='Insira sua senha' /*onChange={ p => setPassword(p.target.value)}*//>
                     </div>
                     <button>Login</button>
                 </form>
@@ -33,4 +29,4 @@ function CadastroPets() {
     )
 }
 
-export default Login
+export default CadastroPets
