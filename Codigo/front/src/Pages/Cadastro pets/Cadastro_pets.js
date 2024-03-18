@@ -9,9 +9,9 @@ function CadastroPets() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        axios.post('http://localhost:8081/login', {username, password})
+        /*axios.post('http://localhost:8081/login', {username, password})
             .then(res => console.log(res))
-            .catch(err => console.log(err))
+            .catch(err => console.log(err))*/
     }
 
     return (
