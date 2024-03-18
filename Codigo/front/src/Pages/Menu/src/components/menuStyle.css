@@ -1,0 +1,71 @@
+.menu {
+    display: flex;
+    justify-content: left;
+    align-items: center;  
+    margin-left: 5px;  
+    margin-top: 290px;
+    position: fixed;
+}
+
+.menu ul {    
+    list-style: none;
+    border-right: #007aa657 solid 10px;  
+    padding-right: 50px;
+    padding-top: 20px;
+    padding-bottom: 23px;
+}
+
+.menu li {
+    margin: 10px;
+    padding-bottom: 20px;
+}
+.menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;    
+    font-size: 20px;
+}
+
+.menu a:hover {
+    color: #ff6600 ;
+}
+
+#opHorarios{
+    padding-left: 10px;
+    border-left: rgb(0, 140, 255) solid 7px;    
+}
+
+#opVendas{
+    padding-left: 10px;
+    border-left: rgba(0, 110, 0, 0.982) solid 7px;
+}
+
+#opCadastroTutor{
+    padding-left: 10px;
+    border-left: rgb(255, 132, 0) solid 7px;
+}
+
+#opGerenciar{
+    padding-left: 10px;
+    border-left: rgb(179, 0, 255) solid 7px;
+}
+
+#opCadastroUser{
+    padding-left: 10px;
+    border-left: rgb(255, 0, 140) solid 7px;
+}
+
+#opControleCaixa{
+    padding-left: 10px;
+    border-left: rgb(255, 0, 0) solid 7px;
+}
+
+.logo{
+    width: 250px;
+    height: 270px;
+    position: fixed;
+    margin-left: 40px;
+
+}
+
