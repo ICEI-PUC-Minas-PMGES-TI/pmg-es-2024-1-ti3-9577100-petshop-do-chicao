@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from "./Pages/Login/Login";
+import Menu from "./Pages/Menu/Menu"
 import ClientForm from './componentes/ClientForm';
 import reportWebVitals from './reportWebVitals';
 import {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     {
         path: "/clientes",
         element: <ClientForm />,
+    },
+    {
+        path: "/menu",
+        element: <Menu />,
     }
 ]);
 

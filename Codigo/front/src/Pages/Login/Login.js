@@ -16,7 +16,7 @@ function Login() {
         axios.post('http://localhost:8081/login', {username, password})
         .then(res => {
             if (res.data === "Login bem sucedido") {
-            navigate('/clientes')
+            navigate('/menu')
             } else
             alert('Login falhou')})     
         .catch(err => console.log(err))
