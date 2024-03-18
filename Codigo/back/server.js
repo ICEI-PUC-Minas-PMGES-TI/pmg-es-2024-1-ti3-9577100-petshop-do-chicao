@@ -92,8 +92,8 @@ app.delete('/clientes/:id', (req, res) => {
 
 app.post('/pets', (req, res) => {
     const { nome, especie, raca, observacoes } = req.body;
-    const sql = 'INSERT INTO pets (nome, especie, raca, observacoes) VALUES (?, ?, ?, ?)';
-    db.query(sql, [nome, especie, raca, observacoes], (err, result) => {
+    const sql = 'INSERT INTO pets (nome, especie, raca,tutor, observacoes) VALUES (?, ?, ?, ?, ?)';
+    db.query(sql, [nome, especie, raca, tutor, observacoes], (err, result) => {
         if (err) {
             console.error('Erro ao cadastrar pet:', err);
             return res.status(500).json({ error: 'Erro interno do servidor' });
