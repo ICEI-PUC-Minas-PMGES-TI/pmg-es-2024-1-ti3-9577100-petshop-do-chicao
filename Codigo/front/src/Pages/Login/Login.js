@@ -2,7 +2,7 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { useState } from 'react'
-import './Login.css'
+import '../Login/Login.css'
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -16,7 +16,7 @@ function Login() {
         axios.post('http://localhost:8081/login', {username, password})
         .then(res => {
             if (res.data === "Login bem sucedido") {
-            navigate('/cadastroPets')
+            navigate('/clientes')
             } else
             alert('Login falhou')})     
         .catch(err => console.log(err))
