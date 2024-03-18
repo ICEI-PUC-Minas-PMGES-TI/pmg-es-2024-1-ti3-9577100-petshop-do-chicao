@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from "./Pages/Login/Login";
 import Menu from "./Pages/Menu/Menu";
-import Cadastro_pets from "./Pages/Cadastro pets/Cadastro_pets";
+import CadastroPets from "./Pages/Cadastro pets/Cadastro_pets";
 import ClientForm from './componentes/ClientForm';
 import reportWebVitals from './reportWebVitals';
 import {
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/pets",
-        element: <Cadastro_pets />,
+        element: <CadastroPets />,
     }
 ]);
 

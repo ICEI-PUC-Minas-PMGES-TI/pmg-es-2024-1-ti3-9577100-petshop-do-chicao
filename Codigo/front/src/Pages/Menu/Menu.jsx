@@ -21,8 +21,14 @@ function Menu() {
           </li>
           <li>
             {/* eslint-disable-next-line */}
-            <a id="opCadastroTutor" href="#">
+            <a id="opCadastroTutor" href="http://localhost:3000/clientes">
               Cadastro de Tutor
+            </a>
+          </li>
+          <li>
+            {/* eslint-disable-next-line */}
+            <a id="opGerenciar" href="http://localhost:3000/pets">
+              Cadastro de Pets
             </a>
           </li>
           <li>
