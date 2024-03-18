@@ -4,7 +4,7 @@ import "./menuStyle.css";
 function Menu() {
   return (
     <div>
-      <img src="Codigo\front\src\images\LogoSF.png" alt="Logo PetShop" class="logo"></img>
+      <img src="Codigo/front/src/images/LogoSF.png" alt="Logo PetShop" class="logo"></img>
     <div class="menu">
       <ul>
         <li>
