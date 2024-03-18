@@ -41,28 +41,71 @@ function ClientForm() {
                 <div class="text-header">Register</div>
             </div>
             <div class="card-body">
-                <form action="#">
+                <form onSubmit={handleSubmit}>
                     <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input required="" class="form-control" name="username" id="username" type="text"></input>
+                        <label for="nome">Nome:</label>
+                        <input
+                            required=""
+                            class="form-control"
+                            name="nome"
+                            id="nome"
+                            type="text"
+                            value={formData.nome}
+                            onChange={handleChange}
+                        ></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="endereco">Endereço:</label>
+                        <input
+                            required=""
+                            class="form-control"
+                            name="endereco"
+                            id="endereco"
+                            type="text"
+                            value={formData.endereco}
+                            onChange={handleChange}
+                        ></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone:</label>
+                        <input
+                            required=""
+                            class="form-control"
+                            name="telefone"
+                            id="telefone"
+                            type="text"
+                            value={formData.telefone}
+                            onChange={handleChange}
+                        ></input>
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input required="" class="form-control" name="email" id="email" type="email"></input>
+                        <input
+                            required=""
+                            class="form-control"
+                            name="email"
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        ></input>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input required="" class="form-control" name="password" id="password" type="password"></input>
+                        <label for="cpf">CPF:</label>
+                        <input
+                            required=""
+                            class="form-control"
+                            name="cpf"
+                            id="cpf"
+                            type="text"
+                            value={formData.cpf}
+                            onChange={handleChange}
+                        ></input>
                     </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password:</label>
-                        <input required="" class="form-control" name="confirm-password" id="confirm-password" type="password"></input>
-                    </div>
-                    <input type="submit" class="btn" value="submit"></input>
+                    <input type="submit" class="btn" value="Submit"></input>
                 </form>
             </div>
         </div>
-
     );
 }
 
