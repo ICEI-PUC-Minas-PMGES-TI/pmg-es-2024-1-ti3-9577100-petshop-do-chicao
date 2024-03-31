@@ -1,10 +1,8 @@
-'use client'
 
 import Clientes from "@/componentes/TelaDeClientes/Clientes";
 
-
-export default function Page() {
+export default function Teste() {
   return (
-    <Clientes/>
+    <h1>hello</h1>
   );
 }
