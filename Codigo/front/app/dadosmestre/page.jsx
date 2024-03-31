@@ -6,7 +6,8 @@ import {
     TableBody,
     TableColumn,
     TableRow,
-    TableCell
+    TableCell,
+    Button
   } from "@nextui-org/react";
 class Dadosmestres extends React.Component{
 
@@ -19,12 +20,26 @@ class Dadosmestres extends React.Component{
     }
 
     componentDidMount(){
-        fetch("http://localhost:8081/products")
+        this.buscarProduto();
+    }
+
+    buscarProduto = () => {
+    fetch("http://localhost:8081/products")
         .then(response => response.json())
         .then(data => {
             this.setState({ products : data})
         })
     }
+
+    deletarProduto = (id) =>{
+        fetch("http://localhost:8081/products"+"/"+id,{ method: 'DELETE'})
+        .then(response =>{
+            if(response.ok){
+                this.buscarProduto();
+            }
+        })
+    }
+
 
     render(){
         return (
@@ -35,6 +50,7 @@ class Dadosmestres extends React.Component{
         <TableColumn>ID</TableColumn>
         <TableColumn>Descrição</TableColumn>
         <TableColumn>Preço</TableColumn>
+        <TableColumn>Opções</TableColumn>
       </TableHeader>
       <TableBody>
       {
@@ -43,6 +59,7 @@ class Dadosmestres extends React.Component{
                         <TableCell> {produto.idproducts} </TableCell>
                         <TableCell> {produto.produto_descricao} </TableCell>
                         <TableCell> {produto.preco} </TableCell>
+                        <TableCell>  <Button>Atualizar</Button> <Button onClick={() => this.deletarProduto(produto.idproducts)}>Excluir</Button> </TableCell>
                         </TableRow>
                         )
                     }

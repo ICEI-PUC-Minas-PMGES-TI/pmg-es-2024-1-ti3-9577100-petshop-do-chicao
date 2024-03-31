@@ -60,6 +60,29 @@ app.get('/products', (req, res) => {
         return res.status(200).json(results);
     });
 });
+app.get('/products/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'SELECT * FROM products WHERE idproducts = ?';
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar produtos:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json(results);
+    });
+});
+
+app.delete('/products/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM products WHERE idproducts = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Erro ao excluir produtos :', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json({ message: 'Cliente excluído com sucesso!' });
+    });
+});
 
 app.get('/clientes/:id', (req, res) => {
     const { id } = req.params;
