@@ -2,6 +2,7 @@ import './App.css';
 import Login from './Pages/Login/Login';
 import ClientForm from './componentes/ClientForm';
 import Menu from './Pages/Menu/Menu'
+import Dadosmestres from './Pages/MasterData/Dadosmestres';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Login/>
       <ClientForm/>
       <Menu/>
+      <Dadosmestres/>
     </div>
   );
 }

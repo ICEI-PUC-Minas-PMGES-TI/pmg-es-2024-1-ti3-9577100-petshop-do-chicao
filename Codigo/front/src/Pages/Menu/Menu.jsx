@@ -49,6 +49,12 @@ function Menu() {
               Cadastro de Usuários
             </a>
           </li>
+          <li>
+            {/* eslint-disable-next-line */}
+            <a id="opCadastroUser" href="http://localhost:3000/dadosmestre">
+              Tabelas de Parâmetros
+            </a>
+          </li>
         </ul>
       </div>
     </div>

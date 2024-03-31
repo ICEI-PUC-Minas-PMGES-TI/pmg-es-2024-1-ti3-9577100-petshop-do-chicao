@@ -4,6 +4,7 @@ import './index.css';
 import Login from "./Pages/Login/Login";
 import Menu from "./Pages/Menu/Menu";
 import CadastroPets from "./Pages/Cadastro pets/Cadastro_pets";
+import Dadosmestres from './Pages/MasterData/Dadosmestres';
 import ClientForm from './componentes/ClientForm';
 import reportWebVitals from './reportWebVitals';
 import {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     {
         path: "/pets",
         element: <CadastroPets />,
+    },
+    {
+        path: "/dadosmestre",
+        element: <Dadosmestres />,
     }
 ]);
 

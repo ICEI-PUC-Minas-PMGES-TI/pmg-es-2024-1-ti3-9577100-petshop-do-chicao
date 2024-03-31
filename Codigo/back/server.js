@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Stellantis@2023',
+    password: 'Teste123@',
     database: 'petshop_do_chicao'
 });
 
@@ -44,6 +44,17 @@ app.get('/clientes', (req, res) => {
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Erro ao buscar clientes:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(200).json(results);
+    });
+});
+
+app.get('/products', (req, res) => {
+    const sql = 'SELECT * FROM products';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar produtos:', err);
             return res.status(500).json({ error: 'Erro interno do servidor' });
         }
         return res.status(200).json(results);
