@@ -1,7 +1,7 @@
 'use client'
 
-import Clientes from "@/componentes/TelaDeClientes/Clientes";
-import FormCliente from "@/componentes/TelaDeClientes/FormCliente";
+import Clientes from "@/componentes/Clientes";
+import FormCliente from "@/componentes/FormCliente";
 
 export default function Page() {
   return (
