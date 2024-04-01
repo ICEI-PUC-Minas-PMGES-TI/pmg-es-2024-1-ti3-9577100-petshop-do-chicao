@@ -1,10 +1,9 @@
 'use client'
 
-import Clientes from "@/componentes/Clientes";
-import FormCliente from "@/componentes/FormCliente";
+import Login from "./login/page";
 
 export default function Page() {
   return (
-    <FormCliente/>
+    <Login/>
   );
 }

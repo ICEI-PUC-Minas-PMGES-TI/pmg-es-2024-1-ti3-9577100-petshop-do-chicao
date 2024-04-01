@@ -26,31 +26,6 @@ export default function FormCliente({ cliente }) {
         });
     };
 
-    const handleCEPChange = (e) => {
-        const cep = e.target.value.replace(/\D/g, '');
-        setFormData({
-            ...formData,
-            cep: cep
-        });
-
-        if (cep.length === 8) {
-            axios.get(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => {
-                    const { data } = response;
-                    setFormData({
-                        ...formData,
-                        estado: data.uf,
-                        cidade: data.localidade,
-                        bairro: data.bairro,
-                        rua: data.logradouro
-                    });
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar CEP:', error);
-                });
-        }
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -143,7 +118,6 @@ export default function FormCliente({ cliente }) {
                             mask="99999-999"
                             maskChar={null}
                             value={formData.cep}
-                            onChange={handleCEPChange}
                         >
                             {(inputProps) => (
                                 <Input
