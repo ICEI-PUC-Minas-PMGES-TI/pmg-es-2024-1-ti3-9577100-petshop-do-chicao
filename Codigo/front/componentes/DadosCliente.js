@@ -1,5 +1,5 @@
 import { Container, Input, Grid, GridItem, Button } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Heading } from '@chakra-ui/react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
@@ -10,15 +10,26 @@ export default function FormCliente({ cliente }) {
         cpf: cliente.cpf || '',
         email: cliente.email || '',
         telefone: cliente.telefone || '',
-        cep: cliente.cep || '',
-        estado: cliente.estado || '',
-        cidade: cliente.cidade || '',
-        bairro: cliente.bairro || '',
-        rua: cliente.rua || '',
-        numero: cliente.numero || ''
+        cep: '',
+        estado: '',
+        cidade: '',
+        bairro: '',
+        rua: '',
+        numero: ''
     });
 
-    const handleChange = (e) => {
+    // Preencher os campos de endereço se existirem
+    if (cliente.endereco) {
+        const [cep, estado, cidade, bairro, rua, numero] = cliente.endereco.split(',').map(item => item.trim());
+        formData.cep = cep || '';
+        formData.estado = estado || '';
+        formData.cidade = cidade || '';
+        formData.bairro = bairro || '';
+        formData.rua = rua || '';
+        formData.numero = numero || '';
+    }
+
+    const handleDadosPessoaisChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -26,31 +37,82 @@ export default function FormCliente({ cliente }) {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleEnderecoChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleUpdate = (e) => {
         e.preventDefault();
-
-        const endereco = `${formData.cep}, ${formData.rua}, ${formData.numero}, ${formData.bairro}, ${formData.cidade}, ${formData.estado}`;
-
+    
+        const enderecoString = `${formData.cep}, ${formData.estado}, ${formData.cidade}, ${formData.bairro}, ${formData.rua}, ${formData.numero}`;
+    
         const dadosCliente = {
             nome: formData.nome,
             cpf: formData.cpf,
             email: formData.email,
             telefone: formData.telefone,
-            endereco: endereco
+            endereco: enderecoString
         };
-
-        axios.post('http://localhost:8081/clientes', dadosCliente)
+    
+        axios.put(`http://localhost:8081/clientes/${cliente.id}`, dadosCliente)
             .then(response => {
-                console.log('Resposta do backend:', response.data);
+                console.log('Cliente atualizado:', response.data);
+                // Limpar o formulário após atualizar
+                setFormData({
+                    nome: '',
+                    cpf: '',
+                    email: '',
+                    telefone: '',
+                    cep: '',
+                    estado: '',
+                    cidade: '',
+                    bairro: '',
+                    rua: '',
+                    numero: ''
+                });
+                window.location.reload(); // Atualizar a página
             })
             .catch(error => {
-                console.error('Erro ao enviar formulário:', error);
+                console.error('Erro ao atualizar cliente:', error);
             });
+    };
+
+    const handleDelete = () => {
+        axios.delete(`http://localhost:8081/clientes/${cliente.id}`)
+            .then(response => {
+                console.log('Cliente deletado:', response.data);
+                // Limpar o formulário após deletar
+                setFormData({
+                    nome: '',
+                    cpf: '',
+                    email: '',
+                    telefone: '',
+                    cep: '',
+                    estado: '',
+                    cidade: '',
+                    bairro: '',
+                    rua: '',
+                    numero: ''
+                });
+                window.location.reload(); // Atualizar a página
+            })
+            .catch(error => {
+                console.error('Erro ao deletar cliente:', error);
+            });
+    };
+
+    const handleCancel = () => {
+        // Implementar a lógica desejada ao clicar em cancelar
+        console.log('Operação cancelada');
     };
 
     return (
         <Container>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleUpdate}>
                 <Heading marginTop={3} marginBottom={3} as='h5' size='sm'>
                     Dados Pessoais
                 </Heading>
@@ -61,7 +123,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='Nome'
                             name='nome'
                             value={formData.nome}
-                            onChange={handleChange}
+                            onChange={handleDadosPessoaisChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -69,7 +131,7 @@ export default function FormCliente({ cliente }) {
                             mask="999.999.999-99"
                             maskChar={null}
                             value={formData.cpf}
-                            onChange={handleChange}
+                            onChange={handleDadosPessoaisChange}
                         >
                             {(inputProps) => (
                                 <Input
@@ -87,7 +149,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='E-mail'
                             name='email'
                             value={formData.email}
-                            onChange={handleChange}
+                            onChange={handleDadosPessoaisChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -95,7 +157,7 @@ export default function FormCliente({ cliente }) {
                             mask="(99) 99999-9999"
                             maskChar={null}
                             value={formData.telefone}
-                            onChange={handleChange}
+                            onChange={handleDadosPessoaisChange}
                         >
                             {(inputProps) => (
                                 <Input
@@ -118,6 +180,7 @@ export default function FormCliente({ cliente }) {
                             mask="99999-999"
                             maskChar={null}
                             value={formData.cep}
+                            onChange={handleEnderecoChange}
                         >
                             {(inputProps) => (
                                 <Input
@@ -135,7 +198,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='Estado'
                             name='estado'
                             value={formData.estado}
-                            onChange={handleChange}
+                            onChange={handleEnderecoChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -144,7 +207,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='Cidade'
                             name='cidade'
                             value={formData.cidade}
-                            onChange={handleChange}
+                            onChange={handleEnderecoChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -153,7 +216,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='Bairro'
                             name='bairro'
                             value={formData.bairro}
-                            onChange={handleChange}
+                            onChange={handleEnderecoChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -162,7 +225,7 @@ export default function FormCliente({ cliente }) {
                             placeholder='Rua'
                             name='rua'
                             value={formData.rua}
-                            onChange={handleChange}
+                            onChange={handleEnderecoChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -171,20 +234,25 @@ export default function FormCliente({ cliente }) {
                             placeholder='Número'
                             name='numero'
                             value={formData.numero}
-                            onChange={handleChange}
+                            onChange={handleEnderecoChange}
                         />
                     </GridItem>
                 </Grid>
 
-                <Grid marginTop={5} templateColumns="repeat(2, 1fr)" gap={6}>
+                <Grid marginTop={5} templateColumns="repeat(3, 1fr)" gap={6}>
                     <GridItem>
-                        <Button borderRadius="lg" colorScheme='blue' size='md' type="submit" w="full">
+                        <Button borderRadius="lg" colorScheme='blue' size='md' onClick={handleCancel} w="full">
                             Cancelar
                         </Button>
                     </GridItem>
                     <GridItem>
-                        <Button borderRadius="lg" colorScheme='red' size='md' type="submit" w="full">
-                            Criar Cliente
+                        <Button borderRadius="lg" colorScheme='red' size='md' onClick={handleDelete} w="full">
+                            Deletar Cliente
+                        </Button>
+                    </GridItem>
+                    <GridItem>
+                        <Button borderRadius="lg" colorScheme='green' size='md' type="submit" w="full">
+                            Atualizar Cliente
                         </Button>
                     </GridItem>
                 </Grid>

@@ -112,6 +112,7 @@ app.put('/clientes/:id', (req, res) => {
     });
 });
 
+
 app.delete('/clientes/:id', (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM clientes WHERE id = ?';
