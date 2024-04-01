@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.11.5",
     "@nextui-org/react": "^2.2.10",
     "axios": "^1.6.8",
+    "boxicons": "^2.1.4",
     "framer-motion": "^11.0.24",
     "install": "^0.13.0",
     "next": "^14.1.4",
