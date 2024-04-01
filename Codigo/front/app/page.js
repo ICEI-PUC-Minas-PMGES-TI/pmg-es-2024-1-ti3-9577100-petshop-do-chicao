@@ -1,10 +1,11 @@
 'use client'
 
-import Clientes from "@/componentes/TelaDeClientes/Clientes";
+import Clientes from "@/app/clientes/page";
+import Login from "./login/page";
 
 
 export default function Page() {
   return (
-    <Clientes/>
+    <Login/>
   );
 }
