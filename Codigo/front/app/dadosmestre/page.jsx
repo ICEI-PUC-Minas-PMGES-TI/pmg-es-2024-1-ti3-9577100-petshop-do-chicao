@@ -9,12 +9,16 @@ import {
     TableCell,
     Button
   } from "@nextui-org/react";
+  import { FormEvent } from "react";
+
 class Dadosmestres extends React.Component{
 
     constructor(props){
         super(props);
 
         this.state = {
+            produto_descricao: '',
+            preco: '',
             products : []
         }
     }
@@ -40,10 +44,56 @@ class Dadosmestres extends React.Component{
         })
     }
 
+    cadastraProduto = (produto) => {
+        fetch("http://localhost:8081/products",
+        { method: 'POST' , 
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(produto)
+        })
+        .then(response =>{
+            if(response.ok){
+                this.buscarProduto();
+            }else{
+                alert('Não foi possível adicionar produto')
+            }
+        })
+    }
+
+
+    atualizaDescricao = (d) =>{
+        this.setState({
+            produto_descricao: d.target.value
+        })
+    }
+
+    atualizaPreco = (p) =>{
+        this.setState({
+            preco: p.target.value
+        })
+    }
+
+    submit = () => {
+        const produto = {
+            produto_descricao: this.state.produto_descricao,
+            preco: this.state.preco
+        }
+
+        this.cadastraProduto();
+    }
+
 
     render(){
         return (
             <div>
+                <div>
+                <form>
+                    <label for="fname">Descrição:</label>
+                    <input type="text" id="fname" name="descricao" value={ this.state.produto_descricao } onChange={this.atualizaDescricao}/>
+                    <label for="lname">Preço:</label>
+                    <input type="text" id="lname" name="preco" value={ this.state.preco } onChange={this.atualizaPreco}/>
+                    <Button onClick={this.submit}>Adicionar</Button>
+                </form>
+                </div>
                 <div>Tabela de Produtos</div>
             <Table aria-label="Example table with dynamic content">
             <TableHeader>
