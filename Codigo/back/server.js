@@ -84,6 +84,19 @@ app.delete('/products/:id', (req, res) => {
     });
 });
 
+app.post('/products', (req, res) => {
+    const { produto_descricao, preco } = req.body;
+
+    const sql = 'INSERT INTO products (produto_descricao, preco) VALUES (?, ?)';
+    db.query(sql, [produto_descricao, preco], (err, result) => {
+        if (err) {
+            console.error('Erro ao cadastrar cliente:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(201).json({ message: 'Cliente cadastrado com sucesso!' });
+    });
+});
+
 app.get('/clientes/:id', (req, res) => {
     const { id } = req.params;
     const sql = 'SELECT * FROM clientes WHERE id = ?';
