@@ -1,51 +1,61 @@
-.formulario{
+.formulario {
     /* Group 6 */
-
-position: absolute;
-width: 200px;
-height: 91px;
-left: 261px;
-top: 201px;
-
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50%;
+    margin: auto;
+    border: auto;
+    top: 300px;
+    transform: translateX(-50%);
 
 }
 
-.input{
+.card_header{
+    align-items: center;
+    text-align: center;    
+    position: relative;
+    left: 60%;    
+
+}
+
+#title {
+    font-weight: bolder;
+    font-size: 40px;
+}
+
+.input {
     /* Rectangle 11 */
-margin: 3px;
-padding: 5px;
-padding-right: 20px;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
+   
+    padding: 10px;
+    margin: 8px;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    width: 240px;
 
-background: #F0EEEE;
-border-radius: 5px;
+    background: #F0EEEE;
+    border-radius: 5px;
 
 }
 
-.button{
-
-
-
-width: 162px;
-height: 25px;
-left: 261px;
-top: 267px;
-
-
-
-/* Rectangle 15 */
-
-
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-background: #FF0000;
-border-radius: 5px;
+.button {
+    width: 240px;
+    height: 40px;
+    left: 261px;
+    top: 267px;
+    /* Rectangle 15 */
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    background: #FF0000;
+    border-radius: 5px;
+    color: white;
 
 
 }
