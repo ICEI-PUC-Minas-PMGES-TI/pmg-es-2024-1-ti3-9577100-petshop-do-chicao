@@ -4,7 +4,6 @@ import React from 'react'
 import axios from 'axios';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import logo from "./img/logo.png"
 
 import styles from '../login/loginstyle.css'
 
