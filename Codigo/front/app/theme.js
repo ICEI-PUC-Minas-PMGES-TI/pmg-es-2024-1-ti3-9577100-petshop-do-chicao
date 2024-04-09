@@ -25,13 +25,13 @@ export const theme = extendTheme({
       sizes: {},
       variants: {},
       defaultProps: {
-        size: 'xs',
+        size: 'sm',
         colorScheme: 'primary'
       },
     },
     Input: {
       defaultProps: {
-        size: 'xs',
+        size: 'sm',
         variant: 'filled',
         colorScheme: ''
       }
