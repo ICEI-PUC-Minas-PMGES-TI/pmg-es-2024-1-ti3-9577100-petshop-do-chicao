@@ -4,6 +4,7 @@ import { ChakraProvider, Grid, GridItem } from "@chakra-ui/react";
 import { Image, Box } from "@chakra-ui/react";
 import { Button, Stack } from "@chakra-ui/react";
 import Clientes from "@/componentes/Clientes";
+import Funcionarios from "../funcionarios/cadastro/page";
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("caixa");
@@ -89,7 +90,7 @@ function App() {
           {currentScreen === "clientes" && <Clientes/>}
           {currentScreen === "estoque" && <Box>Conteúdo da tela de Estoque</Box>}
           {currentScreen === "agendamentos" && <Box>Conteúdo da tela de Agendamentos</Box>}
-          {currentScreen === "funcionarios" && <Box>Conteúdo da tela de Funcionários</Box>}
+          {currentScreen === "funcionarios" && <Funcionarios/>}
         </GridItem>
       </Grid>
     </ChakraProvider>

@@ -101,7 +101,7 @@ export default function CadastrarFuncionario() {
             gap={"2"}
           >
             <GridItem area={"headerDadosPessoais"}>
-              <Text fontSize="sm" fontWeight="bold">
+              <Text fontSize="30px" fontWeight="bolder" alignSelf={"center"} textAlign={"center"}>
                 Dados Pessoais
               </Text>
             </GridItem>

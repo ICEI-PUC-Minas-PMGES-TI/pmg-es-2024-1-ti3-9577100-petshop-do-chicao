@@ -1,10 +1,8 @@
 import { extendTheme } from "@chakra-ui/react";
+import { fonts } from "./fonts";
 
 export const theme = extendTheme({
-  fonts: {
-    heading: 'var(--font-rubik)',
-    body: 'var(--font-rubik)',
-  },
+  
   colors: {
     primary: {
       50: '#ffe5e5',
@@ -27,13 +25,14 @@ export const theme = extendTheme({
       defaultProps: {
         size: 'sm',
         colorScheme: 'primary'
+        
       },
     },
     Input: {
       defaultProps: {
-        size: 'sm',
+        size: 'lg',
         variant: 'filled',
-        colorScheme: ''
+        colorScheme: ''        
       }
     }
   },
