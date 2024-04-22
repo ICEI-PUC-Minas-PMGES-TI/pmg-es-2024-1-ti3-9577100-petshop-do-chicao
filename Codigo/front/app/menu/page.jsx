@@ -3,6 +3,7 @@ import React from "react";
 import { ChakraProvider, Grid, GridItem, background } from "@chakra-ui/react";
 import { Image, Box } from "@chakra-ui/react";
 import { Button, ButtonGroup, Stack, HStack, VStack } from "@chakra-ui/react";
+import Clientes from "@/componentes/Clientes";
 
 
 

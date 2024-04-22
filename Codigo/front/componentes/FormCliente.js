@@ -73,6 +73,7 @@ export default function FormCliente() {
             .then(response => {
                 console.log('Resposta do backend:', response.data);
                 setFormData(initialState);
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Erro ao enviar formulário:', error);
@@ -211,12 +212,7 @@ export default function FormCliente() {
                     </GridItem>
                 </Grid>
 
-                <Grid marginTop={5} templateColumns="repeat(2, 1fr)" gap={6}>
-                    <GridItem>
-                        <Button borderRadius="lg" colorScheme='blue' size='md' type="submit" w="full">
-                            Cancelar
-                        </Button>
-                    </GridItem>
+                <Grid marginTop={5} marginBottom={5} templateColumns="repeat(1, 1fr)" gap={6}>
                     <GridItem>
                         <Button borderRadius="lg" colorScheme='red' size='md' type="submit" w="full">
                             Criar Cliente

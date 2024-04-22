@@ -1,15 +1,15 @@
+import React, { useState, useEffect } from 'react';
 import { Container, Input, Grid, GridItem, Button } from '@chakra-ui/react';
-import { useState } from 'react';
-import { Heading } from '@chakra-ui/react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
+import { Heading } from '@chakra-ui/react';
 
-export default function FormCliente({ cliente }) {
+export default function DadosCliente({ cliente }) {
     const [formData, setFormData] = useState({
-        nome: cliente.nome || '',
-        cpf: cliente.cpf || '',
-        email: cliente.email || '',
-        telefone: cliente.telefone || '',
+        nome: '',
+        cpf: '',
+        email: '',
+        telefone: '',
         cep: '',
         estado: '',
         cidade: '',
@@ -18,16 +18,42 @@ export default function FormCliente({ cliente }) {
         numero: ''
     });
 
-    // Preencher os campos de endereço se existirem
-    if (cliente.endereco) {
-        const [cep, estado, cidade, bairro, rua, numero] = cliente.endereco.split(',').map(item => item.trim());
-        formData.cep = cep || '';
-        formData.estado = estado || '';
-        formData.cidade = cidade || '';
-        formData.bairro = bairro || '';
-        formData.rua = rua || '';
-        formData.numero = numero || '';
-    }
+    useEffect(() => {
+        // Preencher os campos se o cliente existir
+        if (cliente) {
+            const [cep, estado, cidade, bairro, rua, numero] = cliente.endereco.split(',').map(item => item.trim());
+            setFormData({
+                nome: cliente.nome || '',
+                cpf: cliente.cpf || '',
+                email: cliente.email || '',
+                telefone: cliente.telefone || '',
+                cep: cep || '',
+                estado: estado || '',
+                cidade: cidade || '',
+                bairro: bairro || '',
+                rua: rua || '',
+                numero: numero || ''
+            });
+        } else {
+            // Limpar os campos se não houver cliente selecionado
+            clearForm();
+        }
+    }, [cliente]);
+
+    const clearForm = () => {
+        setFormData({
+            nome: '',
+            cpf: '',
+            email: '',
+            telefone: '',
+            cep: '',
+            estado: '',
+            cidade: '',
+            bairro: '',
+            rua: '',
+            numero: ''
+        });
+    };
 
     const handleDadosPessoaisChange = (e) => {
         const { name, value } = e.target;
@@ -62,18 +88,7 @@ export default function FormCliente({ cliente }) {
             .then(response => {
                 console.log('Cliente atualizado:', response.data);
                 // Limpar o formulário após atualizar
-                setFormData({
-                    nome: '',
-                    cpf: '',
-                    email: '',
-                    telefone: '',
-                    cep: '',
-                    estado: '',
-                    cidade: '',
-                    bairro: '',
-                    rua: '',
-                    numero: ''
-                });
+                clearForm();
                 window.location.reload(); // Atualizar a página
             })
             .catch(error => {
@@ -86,18 +101,7 @@ export default function FormCliente({ cliente }) {
             .then(response => {
                 console.log('Cliente deletado:', response.data);
                 // Limpar o formulário após deletar
-                setFormData({
-                    nome: '',
-                    cpf: '',
-                    email: '',
-                    telefone: '',
-                    cep: '',
-                    estado: '',
-                    cidade: '',
-                    bairro: '',
-                    rua: '',
-                    numero: ''
-                });
+                clearForm();
                 window.location.reload(); // Atualizar a página
             })
             .catch(error => {
@@ -239,12 +243,7 @@ export default function FormCliente({ cliente }) {
                     </GridItem>
                 </Grid>
 
-                <Grid marginTop={5} templateColumns="repeat(3, 1fr)" gap={6}>
-                    <GridItem>
-                        <Button borderRadius="lg" colorScheme='blue' size='md' onClick={handleCancel} w="full">
-                            Cancelar
-                        </Button>
-                    </GridItem>
+                <Grid marginTop={5} marginBottom={5} templateColumns="repeat(2, 1fr)" gap={6}>
                     <GridItem>
                         <Button borderRadius="lg" colorScheme='red' size='md' onClick={handleDelete} w="full">
                             Deletar Cliente
