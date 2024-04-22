@@ -1,9 +1,13 @@
 'use client'
 
+import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./login/page";
+import { theme } from "./theme";
 
 export default function Page() {
   return (
-    <Login/>
+    <ChakraProvider theme={theme}>
+      <Login/>
+    </ChakraProvider>
   );
 }

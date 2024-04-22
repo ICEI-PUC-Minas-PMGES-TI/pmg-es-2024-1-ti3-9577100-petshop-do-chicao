@@ -188,6 +188,19 @@ app.delete('/pets/:id', (req, res) => {
     });
 });
 
+app.post('/funcionarios', (req, res) => {
+    const { nome, email, telefone, cpf, senha, endereco } = req.body;
+
+    const sql = 'INSERT INTO funcionarios (nome, email, telefone, cpf, senha, endereco) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(sql, [nome, email, telefone, cpf, senha, endereco], (err, result) => {
+        if (err) {
+            console.error('Erro ao cadastrar funcionário:', err);
+            return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+        return res.status(201).json({ message: 'Funcionário cadastrado com sucesso!' });
+    });
+});
+
 app.listen(8081, () => {
     console.log(`Server is running on port 8081.`);
 });
