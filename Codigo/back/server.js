@@ -126,9 +126,9 @@ app.delete('/clientes/:id', (req, res) => {
 });
 
 app.post('/pets', (req, res) => {
-    const { nome, especie, raca, observacoes } = req.body;
-    const sql = 'INSERT INTO pets (nome, especie, raca,tutor, observacoes) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [nome, especie, raca, tutor, observacoes], (err, result) => {
+    const { nome, raca, temperamento, idade,  observacoes, tutor } = req.body;
+    const sql = 'INSERT INTO petshop_do_chicao.pets (nome, raca, temperamento, idade,  observacoes, tutor) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(sql, [nome, raca, temperamento, idade,  observacoes, tutor], (err, result) => {
         if (err) {
             console.error('Erro ao cadastrar pet:', err);
             return res.status(500).json({ error: 'Erro interno do servidor' });
@@ -165,9 +165,9 @@ app.get('/pets/:id', (req, res) => {
 
 app.put('/pets/:id', (req, res) => {
     const { id } = req.params;
-    const { nome, especie, raca, observacoes } = req.body;
-    const sql = 'UPDATE pets SET nome = ?, especie = ?, raca = ?, observacoes = ? WHERE id = ?';
-    db.query(sql, [nome, especie, raca, observacoes, id], (err, result) => {
+    const { nome, raca, temperamento, idade,  observacoes, tutor } = req.body;
+    const sql = 'UPDATE pets SET nome = ?, raca = ?, temperamento = ?, idade = ?, observacoes = ?, tutor = ? WHERE id = ?';
+    db.query(sql, [nome, raca, temperamento, idade,  observacoes, tutor, id], (err, result) => {
         if (err) {
             console.error('Erro ao atualizar pet:', err);
             return res.status(500).json({ error: 'Erro interno do servidor' });
