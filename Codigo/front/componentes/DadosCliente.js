@@ -19,7 +19,6 @@ export default function DadosCliente({ cliente }) {
     });
 
     useEffect(() => {
-        // Preencher os campos se o cliente existir
         if (cliente) {
             const [cep, estado, cidade, bairro, rua, numero] = cliente.endereco.split(',').map(item => item.trim());
             setFormData({
@@ -35,7 +34,6 @@ export default function DadosCliente({ cliente }) {
                 numero: numero || ''
             });
         } else {
-            // Limpar os campos se não houver cliente selecionado
             clearForm();
         }
     }, [cliente]);
@@ -87,9 +85,8 @@ export default function DadosCliente({ cliente }) {
         axios.put(`http://localhost:8081/clientes/${cliente.id}`, dadosCliente)
             .then(response => {
                 console.log('Cliente atualizado:', response.data);
-                // Limpar o formulário após atualizar
                 clearForm();
-                window.location.reload(); // Atualizar a página
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Erro ao atualizar cliente:', error);
@@ -100,9 +97,8 @@ export default function DadosCliente({ cliente }) {
         axios.delete(`http://localhost:8081/clientes/${cliente.id}`)
             .then(response => {
                 console.log('Cliente deletado:', response.data);
-                // Limpar o formulário após deletar
                 clearForm();
-                window.location.reload(); // Atualizar a página
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Erro ao deletar cliente:', error);
@@ -110,7 +106,6 @@ export default function DadosCliente({ cliente }) {
     };
 
     const handleCancel = () => {
-        // Implementar a lógica desejada ao clicar em cancelar
         console.log('Operação cancelada');
     };
 

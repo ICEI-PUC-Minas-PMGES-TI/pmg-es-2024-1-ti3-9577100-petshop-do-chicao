@@ -1,35 +1,16 @@
-"use client";
-import React from "react";
-import { ChakraProvider, Grid, GridItem, background } from "@chakra-ui/react";
+'use client'
+import React, { useState } from "react";
+import { ChakraProvider, Grid, GridItem } from "@chakra-ui/react";
 import { Image, Box } from "@chakra-ui/react";
-import { Button, ButtonGroup, Stack, HStack, VStack } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
 import Clientes from "@/componentes/Clientes";
 
 function App() {
-  // Obtém a URL atual
-  const currentURL = window.location.href;
+  const [currentScreen, setCurrentScreen] = useState("caixa");
 
-  // Condição para determinar a cor de fundo do botão
-  let bgCaixa = "white",
-    bgVenda = "white",
-    bgCliente = "white",
-    bgEstoque = "white",
-    bgAgendamento = "white",
-    bgFuncionario = "white";
-
-  if (currentURL.includes("caixa")) {
-    bgCaixa = "red"; // Defina a cor de fundo como vermelho se a URL incluir 'Caixa'
-  } else if (currentURL.includes("venda")) {
-    bgVenda = "red"; // Defina a cor de fundo como azul se a URL incluir 'Venda'
-  } else if (currentURL.includes("clientes")) {
-    bgCliente = "red"; // Defina a cor de fundo como azul se a URL incluir 'clientes'
-  } else if (currentURL.includes("estoque")) {
-    bgEstoque = "red"; // Defina a cor de fundo como azul se a URL incluir 'Estoque'
-  } else if (currentURL.includes("agendamentos")) {
-    bgAgendamento = "red"; // Defina a cor de fundo como azul se a URL incluir 'Agendamentos'
-  } else if (currentURL.includes("funcionario")) {
-    bgFuncionario = "red"; // Defina a cor de fundo como azul se a URL incluir 'Funcionarios'
-  }
+  const handleScreenChange = (screen) => {
+    setCurrentScreen(screen);
+  };
 
   return (
     <ChakraProvider>
@@ -52,47 +33,64 @@ function App() {
             justify-content="left"
             width={200}
           >
-            <Button id="opCaixa" size="lg" bg={bgCaixa} color='black'>
+            <Button
+              size="lg"
+              bg={currentScreen === "caixa" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("caixa")}
+            >
               Caixa
             </Button>
-            <Button id="opVendas" size="lg" bg={bgVenda} color='black'>
+            <Button
+              size="lg"
+              bg={currentScreen === "vendas" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("vendas")}
+            >
               Vendas
             </Button>
             <Button
-              id="opClientes"
               size="lg"
-              bg={bgCliente}
-              color='black'
+              bg={currentScreen === "clientes" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("clientes")}
             >
               Clientes
             </Button>
             <Button
-              id="opEstoque"
               size="lg"
-              bg={bgEstoque}
-              color='black'
+              bg={currentScreen === "estoque" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("estoque")}
             >
               Estoque
             </Button>
             <Button
-              id="opAgendamentos"
               size="lg"
-              bg={bgAgendamento}
-              color='black'
+              bg={currentScreen === "agendamentos" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("agendamentos")}
             >
               Agendamentos
             </Button>
             <Button
-              id="opFuncionarios"
               size="lg"
-              bg={bgFuncionario}
-              color='black'
+              bg={currentScreen === "funcionarios" ? "red" : "white"}
+              color="black"
+              onClick={() => handleScreenChange("funcionarios")}
             >
-              Funcionarios
+              Funcionários
             </Button>
           </Stack>
         </GridItem>
-        <GridItem pl="2" area={"main"} h="auto"></GridItem>
+        <GridItem pl="2" area={"main"} h="auto" margin={5}>
+          {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
+          {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
+          {currentScreen === "clientes" && <Clientes/>}
+          {currentScreen === "estoque" && <Box>Conteúdo da tela de Estoque</Box>}
+          {currentScreen === "agendamentos" && <Box>Conteúdo da tela de Agendamentos</Box>}
+          {currentScreen === "funcionarios" && <Box>Conteúdo da tela de Funcionários</Box>}
+        </GridItem>
       </Grid>
     </ChakraProvider>
   );

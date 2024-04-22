@@ -82,11 +82,8 @@ export default function FormCliente() {
 
     return (
         <Container>
-            <Heading pb={10} pt={40} fontSize={40} textAlign={'center'}>
-                 Cadastro de Cliente
-            </Heading>
             <form onSubmit={handleSubmit}>
-                <Heading marginTop={3} marginBottom={3} fontSize={20} as='h5' size='sm'>
+                <Heading marginTop={3} marginBottom={3} as='h5' size='sm'>
                     Dados Pessoais
                 </Heading>
                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>
@@ -146,7 +143,7 @@ export default function FormCliente() {
                     </GridItem>
                 </Grid>
 
-                <Heading marginTop={3} marginBottom={3} fontSize={20} as='h5' size='sm'>
+                <Heading marginTop={3} marginBottom={3} as='h5' size='sm'>
                     Endereço
                 </Heading>
                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>

@@ -82,7 +82,7 @@ export default function Clientes() {
                     </Thead>
                     <Tbody>
                         {clientes.map((cliente, index) => (
-                            <Tr key={index} onClick={() => handleClienteClick(cliente)}> {/* Adiciona o evento de clique na linha */}
+                            <Tr key={index} onClick={() => handleClienteClick(cliente)}>
                                 <Td width='auto'>{cliente.nome}</Td>
                                 <Td width='auto'>{cliente.email}</Td>
                                 <Td isNumeric width='auto'>{cliente.telefone}</Td>
