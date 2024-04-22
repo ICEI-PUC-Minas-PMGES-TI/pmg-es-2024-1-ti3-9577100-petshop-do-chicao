@@ -25,7 +25,7 @@ function App() {
         fontWeight="bold"
       >
         <GridItem pl="5" area={"nav"} width={300} height={100} position="fixed">
-          <Image boxSize="200px" objectFit="cover" src="./menu/logoPet.jpg" />
+          <Image boxSize="200px" objectFit="cover" src="./logoPet.jpg" />
           <Stack
             spacing={4}
             pt={20}

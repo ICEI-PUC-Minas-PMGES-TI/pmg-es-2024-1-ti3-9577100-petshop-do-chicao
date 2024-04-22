@@ -3,6 +3,7 @@ import { Container, Input, Grid, GridItem, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { Heading } from '@chakra-ui/react';
+import DeleteButton from './DeleteButton';
 
 export default function DadosCliente({ cliente }) {
     const [formData, setFormData] = useState({
@@ -71,9 +72,9 @@ export default function DadosCliente({ cliente }) {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-    
+
         const enderecoString = `${formData.cep}, ${formData.estado}, ${formData.cidade}, ${formData.bairro}, ${formData.rua}, ${formData.numero}`;
-    
+
         const dadosCliente = {
             nome: formData.nome,
             cpf: formData.cpf,
@@ -81,7 +82,7 @@ export default function DadosCliente({ cliente }) {
             telefone: formData.telefone,
             endereco: enderecoString
         };
-    
+
         axios.put(`http://localhost:8081/clientes/${cliente.id}`, dadosCliente)
             .then(response => {
                 console.log('Cliente atualizado:', response.data);
@@ -240,9 +241,7 @@ export default function DadosCliente({ cliente }) {
 
                 <Grid marginTop={5} marginBottom={5} templateColumns="repeat(2, 1fr)" gap={6}>
                     <GridItem>
-                        <Button borderRadius="lg" colorScheme='red' size='md' onClick={handleDelete} w="full">
-                            Deletar Cliente
-                        </Button>
+                        <DeleteButton cliente={cliente} limparFormulario={clearForm} handleDelete={handleDelete} />
                     </GridItem>
                     <GridItem>
                         <Button borderRadius="lg" colorScheme='green' size='md' type="submit" w="full">
