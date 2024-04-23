@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'Stellantis@2023',
     database: 'petshop_do_chicao'
 });
 
@@ -138,7 +138,7 @@ app.post('/pets', (req, res) => {
 });
 
 app.get('/pets', (req, res) => {
-    const sql = 'SELECT * FROM pets';
+    const sql = 'SELECT * FROM petshop_do_chicao.pets';
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Erro ao buscar pets:', err);
@@ -150,7 +150,7 @@ app.get('/pets', (req, res) => {
 
 app.get('/pets/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'SELECT * FROM pets WHERE id = ?';
+    const sql = 'SELECT * FROM petshop_do_chicao.pets WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Erro ao buscar pet:', err);
@@ -166,7 +166,7 @@ app.get('/pets/:id', (req, res) => {
 app.put('/pets/:id', (req, res) => {
     const { id } = req.params;
     const { nome, raca, temperamento, idade,  observacoes, tutor } = req.body;
-    const sql = 'UPDATE pets SET nome = ?, raca = ?, temperamento = ?, idade = ?, observacoes = ?, tutor = ? WHERE id = ?';
+    const sql = 'UPDATE petshop_do_chicao.pets SET nome = ?, raca = ?, temperamento = ?, idade = ?, observacoes = ?, tutor = ? WHERE id = ?';
     db.query(sql, [nome, raca, temperamento, idade,  observacoes, tutor, id], (err, result) => {
         if (err) {
             console.error('Erro ao atualizar pet:', err);
@@ -178,7 +178,7 @@ app.put('/pets/:id', (req, res) => {
 
 app.delete('/pets/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM pets WHERE id = ?';
+    const sql = 'DELETE FROM petshop_do_chicao.pets WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Erro ao excluir pet:', err);

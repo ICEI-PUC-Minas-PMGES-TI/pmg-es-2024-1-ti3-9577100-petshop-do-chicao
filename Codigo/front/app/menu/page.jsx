@@ -4,6 +4,7 @@ import { ChakraProvider, Grid, GridItem } from "@chakra-ui/react";
 import { Image, Box } from "@chakra-ui/react";
 import { Button, Stack } from "@chakra-ui/react";
 import Clientes from "@/componentes/Clientes";
+import Pets from "@/app/cadastro_pets/page";
 import Funcionarios from "../funcionarios/cadastro/page";
 
 function App() {
@@ -59,6 +60,14 @@ function App() {
               Clientes
             </Button>
             <Button
+                size="lg"
+                bg={currentScreen === "Pets" ? "red" : "white"}
+                color="black"
+                onClick={() => handleScreenChange("pets")}
+            >
+              Pets
+            </Button>
+            <Button
               size="lg"
               bg={currentScreen === "estoque" ? "red" : "white"}
               color="black"
@@ -88,6 +97,7 @@ function App() {
           {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
           {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
           {currentScreen === "clientes" && <Clientes/>}
+          {currentScreen === "pets" && <Pets/>}
           {currentScreen === "estoque" && <Box>Conteúdo da tela de Estoque</Box>}
           {currentScreen === "agendamentos" && <Box>Conteúdo da tela de Agendamentos</Box>}
           {currentScreen === "funcionarios" && <Funcionarios/>}

@@ -4,6 +4,7 @@ import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { Heading } from '@chakra-ui/react';
 import DeleteButton from './DeleteButton';
+import data from "@/app/cadastro_pets/Racas.json";
 
 export default function DadosCliente({ cliente }) {
     const [formData, setFormData] = useState({

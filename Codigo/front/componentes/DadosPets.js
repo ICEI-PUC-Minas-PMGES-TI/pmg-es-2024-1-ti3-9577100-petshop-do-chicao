@@ -1,21 +1,18 @@
-import {Container, Input, Grid, GridItem, Button, Stack, Select, Textarea} from '@chakra-ui/react';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+import {Container, Input, Grid, GridItem, Button, Select} from '@chakra-ui/react';
+import axios from 'axios';
 import { Heading } from '@chakra-ui/react';
-import axios, {options} from 'axios';
-import InputMask from 'react-input-mask';
-import data from "@/app/cadastro_pets/Racas.json";
+import DeleteButton from './DeleteButton';
 
-export default function FormPets() {
-    const initialState = {
+export default function DadosPets({ pet }) {
+    const [formData, setFormData] = useState({
         nome: '',
         raca: '',
         temperamento: '',
         idade: '',
-        observacoes: 'x',
+        observacoes: '',
         tutor: ''
-    };
-
-    const [formData, setFormData] = useState(initialState);
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,29 +22,21 @@ export default function FormPets() {
         });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
 
-        const dadosPet = {
-            nome: formData.nome,
-            raca: formData.raca,
-            temperamento: formData.temperamento,
-            idade: formData.idade,
-            observacoes: formData.observacoes,
-            tutor: formData.tutor
-        };
-
-        axios.post('http://localhost:8081/pets', dadosPet)
-            .then(response => {
-                console.log('Resposta do backend:', response.data);
-                alert(response.data.message);
-                setFormData(initialState);
-            })
-            .catch(error => {
-                alert('Erro ao enviar formulário:')
-                console.error('Erro ao enviar formulário', error);
+    useEffect(() => {
+        if (pet) {
+            setFormData({
+                nome: pet.nome || '',
+                raca: pet.raca || '',
+                temperamento: pet.temperamento || '',
+                idade: pet.idade || '',
+                observacoes: pet.observacoes || '',
+                tutor: pet.tutor || ''
             });
-    };
+        } else {
+            clearForm();
+        }
+    }, [pet]);
 
     const [racas, setRacas] = useState([]);
 
@@ -60,6 +49,9 @@ export default function FormPets() {
 
         loadRacas();
     }, []);
+
+
+
     const [tutores, setTutores] = useState([]);
 
     useEffect(() => {
@@ -75,12 +67,69 @@ export default function FormPets() {
         fetchData();
     }, []);
 
+    const clearForm = () => {
+        setFormData({
+            nome: '',
+            raca: '',
+            temperamento: '',
+            idade: '',
+            observacoes: '',
+            tutor: ''
+        });
+    };
+
+    const handleDadosPetsChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+
+        const dadosPet = {
+            nome: formData.nome,
+            raca: formData.raca,
+            temperamento: formData.temperamento,
+            idade: formData.idade,
+            observacoes: formData.observacoes,
+            tutor: formData.tutor
+        };
+
+        console.log(dadosPet);
+
+        axios.put(`http://localhost:8081/pets/${pet.id}`, dadosPet)
+            .then(response => {
+                console.log('Pet atualizado:', response.data);
+                clearForm();
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar pet:', error);
+            });
+    };
+
+    const handleDelete = () => {
+        axios.delete(`http://localhost:8081/pets/${pet.id}`)
+            .then(response => {
+                console.log('Pet deletado:', response.data);
+                clearForm();
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erro ao deletar pet:', error);
+            });
+    };
+
+
     return (
         <Container>
             <Heading pb={10} pt={10} fontSize={40} textAlign={'center'}>
-                 Cadastro de Pets
+                Cadastro de Pets
             </Heading>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleUpdate}>
                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                     <GridItem>
                         <Input
@@ -88,7 +137,7 @@ export default function FormPets() {
                             placeholder='Nome'
                             name='nome'
                             value={formData.nome}
-                            onChange={handleChange}
+                            onChange={handleDadosPetsChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -107,15 +156,6 @@ export default function FormPets() {
                         </Select>
                     </GridItem>
                     <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Idade'
-                            name='idade'
-                            value={formData.idade}
-                            onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
                         <Select
                             borderRadius="lg"
                             placeholder='Temperamento'
@@ -129,13 +169,22 @@ export default function FormPets() {
 
                         </Select>
                     </GridItem>
+                    <GridItem>
+                        <Input
+                            borderRadius="lg"
+                            placeholder='Idade'
+                            name='idade'
+                            value={formData.idade}
+                            onChange={handleDadosPetsChange}
+                        />
+                    </GridItem>
                     <GridItem colSpan={2}>
                         <Input
                             borderRadius="lg"
                             placeholder='Observações'
-                            name="Observacoes"
+                            name='observacoes'
                             value={formData.observacoes}
-                            onChange={handleChange}
+                            onChange={handleDadosPetsChange}
                         />
                     </GridItem>
                     <GridItem>
@@ -155,15 +204,13 @@ export default function FormPets() {
                     </GridItem>
                 </Grid>
 
-                <Grid marginTop={5} templateColumns="repeat(2, 1fr)" gap={6}>
+                <Grid marginTop={5} marginBottom={5} templateColumns="repeat(2, 1fr)" gap={6}>
                     <GridItem>
-                        <Button borderRadius="lg" colorScheme='blue' size='md' type="submit" w="full">
-                            Cancelar
-                        </Button>
+                        <DeleteButton pet={pet} limparFormulario={clearForm} handleDelete={handleDelete} />
                     </GridItem>
                     <GridItem>
-                        <Button borderRadius="lg" colorScheme='red' size='md' type="submit" w="full" >
-                            Criar Pet
+                        <Button borderRadius="lg" colorScheme='green' size='md' type="submit" w="full">
+                            Atualizar Pet
                         </Button>
                     </GridItem>
                 </Grid>

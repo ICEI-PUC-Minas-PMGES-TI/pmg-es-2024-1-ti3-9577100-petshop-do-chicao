@@ -1,0 +1,12 @@
+[
+  { "id": 1, "value": "Labrador Retriever" },
+  { "id": 2, "value": "Poodle" },
+  { "id": 3, "value": "Pastor Alemão" },
+  { "id": 4, "value": "Golden Retriever" },
+  { "id": 5, "value": "Bulldog Francês" },
+  { "id": 6, "value": "Shih Tzu" },
+  { "id": 7, "value": "Yorkshire" },
+  { "id": 8, "value": "Lhasa Apso" },
+  { "id": 9, "value": "Pug" },
+  { "id": 10, "value": "Pinscher" }
+]
