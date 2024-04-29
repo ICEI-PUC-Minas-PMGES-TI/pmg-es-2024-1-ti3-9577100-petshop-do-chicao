@@ -1,12 +1,22 @@
-'use client'
+"use client";
 import React, { useState } from "react";
-import { ChakraProvider, Grid, GridItem, Button, Stack, extendTheme, Image, Box  } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Grid,
+  GridItem,
+  Button,
+  Stack,
+  extendTheme,
+  Box,
+} from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 // Paginas //
 import Clientes from "@/componentes/Clientes";
 import Pets from "@/app/cadastro_pets/page";
 import Funcionarios from "../funcionarios/cadastro/page";
-
+import Logo from "@/app/menu/logoPet.jpg";
+import Image from "next/image";
+import ListaFuncionarios from "../funcionarios/page";
 
 const theme = extendTheme({
   styles: {
@@ -47,7 +57,16 @@ function App() {
         fontWeight="bold"
       >
         <GridItem pl="5" area={"nav"} width={300} height={100} position="fixed">
-          <Image boxSize="200px" objectFit="cover" src="./logoPet.jpg" />
+          <Image
+            src={Logo}
+            alt="Logo"
+            width={200}
+            height={200}
+            style={{
+              objectFit: "cover",
+            }}
+            priority
+          />
           <Stack
             spacing={4}
             pt={20}
@@ -125,9 +144,13 @@ function App() {
           {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
           {currentScreen === "clientes" && <Clientes />}
           {currentScreen === "pets" && <Pets />}
-          {currentScreen === "estoque" && <Box>Conteúdo da tela de Estoque</Box>}
-          {currentScreen === "agendamentos" && <Box>Conteúdo da tela de Agendamentos</Box>}
-          {currentScreen === "funcionarios" && <Funcionarios />}
+          {currentScreen === "estoque" && (
+            <Box>Conteúdo da tela de Estoque</Box>
+          )}
+          {currentScreen === "agendamentos" && (
+            <Box>Conteúdo da tela de Agendamentos</Box>
+          )}
+          {currentScreen === "funcionarios" && <ListaFuncionarios />}
         </GridItem>
       </Grid>
     </ChakraProvider>

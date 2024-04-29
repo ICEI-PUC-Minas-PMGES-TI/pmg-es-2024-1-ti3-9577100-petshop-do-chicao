@@ -30,7 +30,7 @@ export const theme = extendTheme({
     },
     Input: {
       defaultProps: {
-        size: 'lg',
+        size: 'sm',
         variant: 'filled',
         colorScheme: ''        
       }
