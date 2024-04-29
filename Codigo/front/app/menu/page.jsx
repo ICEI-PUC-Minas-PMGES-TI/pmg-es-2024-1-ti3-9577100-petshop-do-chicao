@@ -17,6 +17,7 @@ import Funcionarios from "../funcionarios/cadastro/page";
 import Logo from "@/app/menu/logoPet.jpg";
 import Image from "next/image";
 import ListaFuncionarios from "../funcionarios/page";
+import Agendamentos from "@/componentes/Agendamentos";
 
 const theme = extendTheme({
   styles: {
@@ -147,9 +148,7 @@ function App() {
           {currentScreen === "estoque" && (
             <Box>Conteúdo da tela de Estoque</Box>
           )}
-          {currentScreen === "agendamentos" && (
-            <Box>Conteúdo da tela de Agendamentos</Box>
-          )}
+          {currentScreen === "agendamentos" && <Agendamentos />}
           {currentScreen === "funcionarios" && <ListaFuncionarios />}
         </GridItem>
       </Grid>
