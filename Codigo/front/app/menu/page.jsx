@@ -6,6 +6,7 @@ import { Button, Stack } from "@chakra-ui/react";
 import Clientes from "@/componentes/Clientes";
 import Pets from "@/app/cadastro_pets/page";
 import Funcionarios from "../funcionarios/cadastro/page";
+import Vendas from "../vendas/page";
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("caixa");
@@ -95,7 +96,7 @@ function App() {
         </GridItem>
         <GridItem pl="2" area={"main"} h="auto" margin={5}>
           {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
-          {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
+          {currentScreen === "vendas" && <Vendas/>}
           {currentScreen === "clientes" && <Clientes/>}
           {currentScreen === "pets" && <Pets/>}
           {currentScreen === "estoque" && <Box>Conteúdo da tela de Estoque</Box>}
