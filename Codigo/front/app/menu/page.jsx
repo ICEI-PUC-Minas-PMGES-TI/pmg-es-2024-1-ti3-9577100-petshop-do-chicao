@@ -1,12 +1,43 @@
-'use client'
+"use client";
 import React, { useState } from "react";
-import { ChakraProvider, Grid, GridItem } from "@chakra-ui/react";
-import { Image, Box } from "@chakra-ui/react";
-import { Button, Stack } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Grid,
+  GridItem,
+  Button,
+  Stack,
+  extendTheme,
+  Box,
+} from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
+// Paginas //
 import Clientes from "@/componentes/Clientes";
 import Pets from "@/app/cadastro_pets/page";
 import Funcionarios from "../funcionarios/cadastro/page";
+import Logo from "@/app/menu/logoPet.jpg";
+import Image from "next/image";
+import ListaFuncionarios from "../funcionarios/page";
+import Agendamentos from "@/componentes/Agendamentos";
 import Vendas from "../vendas/page";
+
+const theme = extendTheme({
+  styles: {
+    global: (props) => ({
+      "html, body": {
+        bg: mode("white", "gray.800")(props),
+      },
+    }),
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        _hover: {
+          bg: "red", // Define a cor de fundo como transparente no hover
+        },
+      },
+    },
+  },
+});
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("caixa");
@@ -16,7 +47,7 @@ function App() {
   };
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Grid
         templateAreas={`
                   "nav main"`}
@@ -28,7 +59,16 @@ function App() {
         fontWeight="bold"
       >
         <GridItem pl="5" area={"nav"} width={300} height={100} position="fixed">
-          <Image boxSize="200px" objectFit="cover" src="./logoPet.jpg" />
+          <Image
+            src={Logo}
+            alt="Logo"
+            width={200}
+            height={200}
+            style={{
+              objectFit: "cover",
+            }}
+            priority
+          />
           <Stack
             spacing={4}
             pt={20}
@@ -37,57 +77,64 @@ function App() {
             width={200}
           >
             <Button
+              colorScheme={currentScreen === "caixa" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "caixa" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "caixa" ? "white" : "black"}
               onClick={() => handleScreenChange("caixa")}
             >
               Caixa
             </Button>
             <Button
+              colorScheme={currentScreen === "vendas" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "vendas" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "vendas" ? "white" : "black"}
               onClick={() => handleScreenChange("vendas")}
             >
               Vendas
             </Button>
             <Button
+              colorScheme={currentScreen === "clientes" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "clientes" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "clientes" ? "white" : "black"}
               onClick={() => handleScreenChange("clientes")}
             >
               Clientes
             </Button>
             <Button
-                size="lg"
-                bg={currentScreen === "Pets" ? "red" : "white"}
-                color="black"
-                onClick={() => handleScreenChange("pets")}
+              colorScheme={currentScreen === "pets" ? "red" : "gray"}
+              size="lg"
+              bg={currentScreen === "pets" ? "red" : "white"}
+              color={currentScreen === "pets" ? "white" : "black"}
+              onClick={() => handleScreenChange("pets")}
             >
               Pets
             </Button>
             <Button
+              colorScheme={currentScreen === "estoque" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "estoque" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "estoque" ? "white" : "black"}
               onClick={() => handleScreenChange("estoque")}
             >
               Estoque
             </Button>
             <Button
+              colorScheme={currentScreen === "agendamentos" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "agendamentos" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "agendamentos" ? "white" : "black"}
               onClick={() => handleScreenChange("agendamentos")}
             >
               Agendamentos
             </Button>
             <Button
+              colorScheme={currentScreen === "funcionarios" ? "red" : "gray"}
               size="lg"
               bg={currentScreen === "funcionarios" ? "red" : "white"}
-              color="black"
+              color={currentScreen === "funcionarios" ? "white" : "black"}
               onClick={() => handleScreenChange("funcionarios")}
             >
               Funcionários
@@ -96,6 +143,14 @@ function App() {
         </GridItem>
         <GridItem pl="2" area={"main"} h="auto" margin={5}>
           {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
+          {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
+          {currentScreen === "clientes" && <Clientes />}
+          {currentScreen === "pets" && <Pets />}
+          {currentScreen === "estoque" && (
+            <Box>Conteúdo da tela de Estoque</Box>
+          )}
+          {currentScreen === "agendamentos" && <Agendamentos />}
+          {currentScreen === "funcionarios" && <ListaFuncionarios />}
           {currentScreen === "vendas" && <Vendas/>}
           {currentScreen === "clientes" && <Clientes/>}
           {currentScreen === "pets" && <Pets/>}

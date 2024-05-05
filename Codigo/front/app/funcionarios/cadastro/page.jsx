@@ -16,7 +16,7 @@ import axios from "axios";
 import { useState } from "react";
 import { PatternFormat } from "react-number-format";
 
-export default function CadastrarFuncionario() {
+export default function CadastroFuncionarios() {
   const initialState = {
     nome: "",
     email: "",
@@ -91,7 +91,7 @@ export default function CadastrarFuncionario() {
   return (
     <ChakraProvider theme={theme}>
       <FormControl>
-        <Center height="100vh">
+        <Center>
           <Grid
             templateAreas={`"headerDadosPessoais"
                                 "dadosPessoais"
@@ -101,7 +101,7 @@ export default function CadastrarFuncionario() {
             gap={"2"}
           >
             <GridItem area={"headerDadosPessoais"}>
-              <Text fontSize="30px" fontWeight="bolder" alignSelf={"center"} textAlign={"center"}>
+              <Text fontSize="sm" fontWeight="bold">
                 Dados Pessoais
               </Text>
             </GridItem>
