@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "Teste123@",
   database: "petshop_do_chicao",
 });
 
@@ -125,6 +125,44 @@ app.delete("/clientes/:id", (req, res) => {
     return res.status(200).json({ message: "Cliente excluído com sucesso!" });
   });
 });
+
+app.get("/vendas", (req, res) => {
+    const sql = "SELECT * FROM vendas";
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error("Erro ao buscar vendas:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res.status(200).json(results);
+    });
+  });
+  
+  app.get("/vendas/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM vendas WHERE idvendas = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Erro ao buscar venda:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      if (result.length === 0) {
+        return res.status(404).json({ message: "Venda não encontrada" });
+      }
+      return res.status(200).json(result[0]);
+    });
+  });
+  
+  app.delete("/vendas/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM vendas WHERE idvendas = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) {
+        console.error("Erro ao excluir cliente:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res.status(200).json({ message: "Cliente excluído com sucesso!" });
+    });
+  });
 
 app.post("/pets", (req, res) => {
   const { nome, raca, temperamento, idade, observacoes, tutor } = req.body;

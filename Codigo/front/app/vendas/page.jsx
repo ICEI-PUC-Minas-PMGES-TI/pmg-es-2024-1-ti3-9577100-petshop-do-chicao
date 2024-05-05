@@ -7,27 +7,20 @@ import {
     TableColumn,
     TableRow,
     TableCell,
-    Button
   } from "@nextui-org/react";
+  import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogHeader, AlertDialogOverlay, Button, ButtonGroup } from '@chakra-ui/react';
 import axios from "axios";
+
+import { useDisclosure } from "@chakra-ui/react";
+import FormVendas from "@/componentes/FormVendas";
+
 
   export default function Vendas(){
 
-    /*constructor(props){
-        super(props);
-
-        this.state = {
-            produto_descricao: '',
-            preco: '',
-            products : []
-        }
-    }*/
-
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [products, setProdutos] = useState([]);
+    const cancelRef = React.useRef();
 
-   /* componentDidMount(){
-        this.buscarProduto();
-    }*/
 
     useEffect   (() => {
         return () => {
@@ -103,9 +96,28 @@ import axios from "axios";
 
 
         return (
-            <div>
+            
                 <div>
-                </div>
+                <Button colorScheme='red' size='md' borderRadius='lg' onClick={onOpen}>
+                    Efetuar venda
+                </Button>
+                <AlertDialog
+                    motionPreset='slideInBottom'
+                    leastDestructiveRef={cancelRef}
+                    onClose={onClose}
+                    isOpen={isOpen}
+                    isCentered
+                >
+                    <AlertDialogOverlay />
+                    <AlertDialogContent>
+                        <AlertDialogHeader>Cadastro de cliente</AlertDialogHeader>
+                        <AlertDialogCloseButton />
+                        <AlertDialogBody>
+                            <FormVendas/>
+                        </AlertDialogBody>
+                    </AlertDialogContent>
+                </AlertDialog>
+                
                 <div>Tabela de Produtos</div>
             <Table aria-label="Example table with dynamic content">
             <TableHeader>
@@ -126,6 +138,7 @@ import axios from "axios";
       </TableBody>
     </Table>
             </div>
+            
         
         )
     }
