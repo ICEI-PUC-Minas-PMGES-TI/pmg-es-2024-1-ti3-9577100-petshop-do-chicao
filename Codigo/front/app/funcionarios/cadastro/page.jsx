@@ -66,7 +66,7 @@ export default function CadastroFuncionarios() {
   };
 
   const handleSubmit = (e) => {
-    const endereco = `${form.cep}, ${form.rua}, ${form.numero}, ${form.bairro}, ${form.cidade}, ${form.estado}`;
+    const endereco = `${form.cep}, ${form.rua}, ${form.complemento}, ${form.bairro}, ${form.cidade}, ${form.estado}`;
 
     const dadosFuncionario = {
       nome: form.nome,

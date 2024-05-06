@@ -2,15 +2,19 @@
 
 import {
   AlertDialog,
+  AlertDialogBody,
   AlertDialogCloseButton,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   ChakraProvider,
   Flex,
   Input,
   InputGroup,
   InputRightElement,
+  SimpleGrid,
   Spacer,
   Table,
   TableContainer,
@@ -24,7 +28,7 @@ import {
 import { theme } from "../theme";
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FormFuncionarios from "@/componentes/FormFuncionarios";
 import CadastroFuncionarios from "./cadastro/page";
 
@@ -41,6 +45,12 @@ export default function ListaFuncionarios() {
     onOpen: onEditOpen,
     onClose: onEditClose,
   } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const cancelRef = useRef()
 
   useEffect(() => {
     return () => {
@@ -54,6 +64,72 @@ export default function ListaFuncionarios() {
         });
     };
   }, []);
+
+  const handleUpdate = (e) => {
+    const endereco = `${document.getElementById("cep").value}, ${
+      document.getElementById("rua").value
+    }, ${document.getElementById("complemento").value}, ${
+      document.getElementById("bairro").value
+    }, ${document.getElementById("cidade").value}, ${
+      document.getElementById("estado").value
+    }`;
+
+    const dadosFuncionario = {
+      nome: document.getElementById("nome").value,
+      email: document.getElementById("email").value,
+      telefone: document.getElementById("telefone").value,
+      senha: document.getElementById("senha").value,
+      cpf: document.getElementById("cpf").value,
+      endereco: endereco,
+    };
+
+    axios
+      .put(
+        `http://localhost:8081/funcionarios/${funcionarioSelecionado.id}`,
+        dadosFuncionario
+      )
+      .then((response) => {
+        console.log("Resposta do backend:", response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar formulário:", error);
+      });
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:8081/funcionarios/${funcionarioSelecionado.id}`)
+      .then((response) => {
+        console.log("Resposta do backend:", response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar formulário:", error);
+      });
+  };
+
+  const handleFuncionarioClick = (funcionario) => {
+    const [cep, rua, complemento, cidade, bairro, estado] = funcionario.endereco
+      .split(",")
+      .map((item) => item.trim());
+    setFuncionarioSelecionado({
+      id: funcionario.id,
+      nome: funcionario.nome,
+      email: funcionario.email,
+      telefone: funcionario.telefone,
+      cpf: funcionario.cpf,
+      senha: funcionario.senha,
+      confirmarSenha: funcionario.senha,
+      cep: cep,
+      estado: estado,
+      cidade: cidade,
+      bairro: bairro,
+      rua: rua,
+      complemento: complemento == "undefined" ? "" : complemento,
+    });
+    onEditOpen();
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -79,26 +155,7 @@ export default function ListaFuncionarios() {
             {funcionarios.map((funcionario) => (
               <Tr
                 key={funcionario.id}
-                onClick={() => {
-                  console.log(funcionario)
-                  const [cep, rua, complemento, cidade, bairro ] = funcionario.endereco.split(',').map(item => item.trim());
-                  setFuncionarioSelecionado({
-                    nome: funcionario.nome,
-                    email: funcionario.email,
-                    telefone: funcionario.telefone,
-                    cpf: funcionario.cpf,
-                    senha: funcionario.senha,
-                    confirmarSenha: funcionario.senha,
-                    cep: cep,
-                    estado: estado,
-                    cidade: cidade,
-                    bairro: bairro,
-                    rua: rua,
-                    complemento: complemento,
-                  });
-                  onEditOpen();
-                  console.log(funcionarioSelecionado)
-                }}
+                onClick={() => handleFuncionarioClick(funcionario)}
               >
                 <Td>{funcionario.nome}</Td>
                 <Td>{funcionario.email}</Td>
@@ -109,34 +166,60 @@ export default function ListaFuncionarios() {
       </TableContainer>
 
       <AlertDialog isOpen={isCreateOpen} onClose={onCreateClose} isCentered>
-        <AlertDialogContent>
-          <AlertDialogHeader>Criar Funcionário</AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <CadastroFuncionarios />
-        </AlertDialogContent>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Criar Funcionário</AlertDialogHeader>
+            <AlertDialogCloseButton />
+            <AlertDialogBody>
+              <CadastroFuncionarios />
+            </AlertDialogBody>
+            <AlertDialogFooter />
+          </AlertDialogContent>
+        </AlertDialogOverlay>
       </AlertDialog>
 
       <AlertDialog isOpen={isEditOpen} onClose={onEditClose} isCentered>
-        <AlertDialogContent>
-          <AlertDialogHeader>Atualizar Funcionário</AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <FormFuncionarios
-            initialState={{
-              nome: "Teste",
-              email: "",
-              telefone: "",
-              cpf: "",
-              senha: "",
-              confirmarSenha: "",
-              cep: "",
-              estado: "",
-              cidade: "",
-              bairro: "",
-              rua: "",
-              complemento: "",
-            }}
-          />
-        </AlertDialogContent>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Atualizar Funcionário</AlertDialogHeader>
+            <AlertDialogCloseButton />
+            <AlertDialogBody>
+              <FormFuncionarios
+                initialState={funcionarioSelecionado}
+                button={
+                  <SimpleGrid columns="2" spacingX={"4"}>
+                    <Button
+                      width="100%"
+                      variant="outline"
+                      onClick={onDeleteOpen}
+                    >
+                      Remover
+                    </Button>
+                    <Button width="100%" type="submit" onClick={handleUpdate}>
+                      Atualizar
+                    </Button>
+                  </SimpleGrid>
+                }
+              />
+            </AlertDialogBody>
+            <AlertDialogFooter />
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <AlertDialog isOpen={isDeleteOpen} onClose={onDeleteClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Excluír funcionário</AlertDialogHeader>
+            <AlertDialogBody>
+              Tem certeza? Esta ação não pode ser desfeita.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button variant="outline" ref={cancelRef} onClick={onDeleteClose}>Cancelar</Button>
+              <Button onClick={handleDelete} ml={3}>Excluír</Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
       </AlertDialog>
     </ChakraProvider>
   );

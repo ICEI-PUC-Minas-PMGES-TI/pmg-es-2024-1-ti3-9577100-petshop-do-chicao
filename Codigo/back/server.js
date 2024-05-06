@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Teste123@",
+  password: "1234",
   database: "petshop_do_chicao",
 });
 
@@ -252,6 +252,20 @@ app.post("/funcionarios", (req, res) => {
   );
 });
 
+app.put("/funcionarios/:id", (req, res) => {
+  const { id } = req.params;
+  const { nome, email, telefone, cpf, senha, endereco } = req.body;
+  const sql =
+    "UPDATE funcionarios SET nome = ?, email = ?, telefone = ?, cpf = ?, senha = ?, endereco = ? WHERE id = ?";
+  db.query(sql, [nome, email, telefone, cpf, senha, endereco, id], (err, result) => {
+    if (err) {
+      console.error("Erro ao atualizar funcionário:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Funcionário atualizado com sucesso!" });
+  });
+});
+
 app.get("/funcionarios", (req, res) => {
   const sql = "SELECT * FROM funcionarios";
   db.query(sql, (err, results) => {
@@ -260,6 +274,18 @@ app.get("/funcionarios", (req, res) => {
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
     return res.status(200).json(results);
+  });
+});
+
+app.delete("/funcionarios/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM funcionarios WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao excluir funcionário:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Cliente excluído com sucesso!" });
   });
 });
 
