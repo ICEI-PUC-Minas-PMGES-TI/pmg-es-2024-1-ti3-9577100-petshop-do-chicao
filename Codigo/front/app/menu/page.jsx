@@ -142,13 +142,6 @@ function App() {
           </Stack>
         </GridItem>
         <GridItem pl="2" area={"main"} h="auto" margin={5}>
-          {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
-          {currentScreen === "vendas" && <Box>Conteúdo da tela de Vendas</Box>}
-          {currentScreen === "clientes" && <Clientes />}
-          {currentScreen === "pets" && <Pets />}
-          {currentScreen === "estoque" && (
-            <Box>Conteúdo da tela de Estoque</Box>
-          )}
           {currentScreen === "agendamentos" && <Agendamentos />}
           {currentScreen === "funcionarios" && <ListaFuncionarios />}
           {currentScreen === "vendas" && <Vendas/>}

@@ -19,12 +19,13 @@ import FormVendas from "@/componentes/FormVendas";
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [products, setProdutos] = useState([]);
+    const [vendas, setVendas] = useState([]);
     const cancelRef = React.useRef();
 
 
     useEffect   (() => {
         return () => {
-            axios
+        axios
         .get("http://localhost:8081/products")
         .then(function (response) {
             console.log(response);
@@ -33,7 +34,15 @@ import FormVendas from "@/componentes/FormVendas";
         .catch(function (error) {
           console.log(error);
         });
-
+        axios
+        .get("http://localhost:8081/vendas")
+        .then(function (resposta) {
+            console.log(resposta);
+          setVendas(resposta.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
         };
       }, []);
 
@@ -46,6 +55,15 @@ import FormVendas from "@/componentes/FormVendas";
             console.log(response);
         })
     }
+    const buscarVenda = () => {
+        fetch("http://localhost:8081/vendas")
+            .then(response => response.json())
+            .then(data => {
+                setVendas({ vendas : data})
+                console.log(vendas);
+                console.log(resposta);
+            })
+        }
 
     const deletarProduto = (id) =>{
         fetch("http://localhost:8081/products"+"/"+id,{ method: 'DELETE'})
@@ -137,9 +155,30 @@ import FormVendas from "@/componentes/FormVendas";
                     }
       </TableBody>
     </Table>
+     <div>Tabela de Vendas</div>
+            <Table aria-label="Example table with dynamic content">
+            <TableHeader>
+        <TableColumn>ID</TableColumn>
+        <TableColumn>Quantidade</TableColumn>
+        <TableColumn>Valor total</TableColumn>
+        <TableColumn>Data da transação</TableColumn>
+      </TableHeader>
+      <TableBody>
+      {
+                        vendas.map((venda) =>(
+                        <TableRow>
+                        <TableCell> {venda.idvendas} </TableCell>
+                        <TableCell> {venda.quantidade} </TableCell>
+                        <TableCell> {venda.valortotal} </TableCell>
+                        <TableCell> {venda.data} </TableCell>
+                        </TableRow>
+                        ))
+                    }
+      </TableBody>
+    </Table>
             </div>
             
-        
+            
         )
     }
 

@@ -1,8 +1,7 @@
-import { Container, Input, Grid, GridItem, Button } from '@chakra-ui/react';
+import { Container, Input, Grid, GridItem, Button, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react';
 import { useState, useRef } from 'react';
 import { Heading } from '@chakra-ui/react';
 import axios from 'axios';
-import InputMask from 'react-input-mask';
 
 export default function FormVendas() {
     const initialState = {
@@ -14,10 +13,10 @@ export default function FormVendas() {
     const [formData, setFormData] = useState(initialState);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { produto, quantiade } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [produto]: value
         });
     };
 
@@ -51,103 +50,36 @@ export default function FormVendas() {
                     <GridItem>
                         <Input
                             borderRadius="lg"
-                            placeholder='Nome'
-                            name='nome'
-                            value={formData.nome}
+                            placeholder='Produto'
+                            name='produto'
+                            value={formData.produto}
                             onChange={handleChange}
                         />
                     </GridItem>
                     <GridItem>
-                        <InputMask
-                            mask="999.999.999-99"
-                            maskChar={null}
-                            value={formData.cpf}
-                            onChange={handleChange}
-                        >
-                            {(inputProps) => (
-                                <Input
-                                    ref={cpfInputRef}
-                                    {...inputProps}
-                                    borderRadius="lg"
-                                    placeholder='CPF'
-                                    name='cpf'
-                                />
-                            )}
-                        </InputMask>
-                    </GridItem>
-                    <GridItem>
-                        <Input
+                    <NumberInput size='sm' defaultValue={1} min={1} onChange={handleChange} value={formData.quantidade}>
+  <NumberInputField focusBorderColor='red.200' />
+  <NumberInputStepper>
+    <NumberIncrementStepper
+      bg='green.200'
+      _active={{ bg: 'green.300' }}
+      children='+'
+    />
+    <NumberDecrementStepper
+      bg='pink.200'
+      _active={{ bg: 'pink.300' }}
+      children='-'
+    />
+  </NumberInputStepper>
+</NumberInput>
+{/*                         <NumberInput
                             borderRadius="lg"
-                            placeholder='E-mail'
-                            name='email'
-                            value={formData.email}
+                            placeholder='Quantidade'
+                            name='quantidade'
+                            value={formData.quantidade}
                             onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <InputMask
-                            mask="(99) 99999-9999"
-                            maskChar={null}
-                            value={formData.telefone}
-                            onChange={handleChange}
-                        >
-                            {(inputProps) => (
-                                <Input
-                                    ref={telefoneInputRef}
-                                    {...inputProps}
-                                    borderRadius="lg"
-                                    placeholder='Telefone'
-                                    name='telefone'
-                                />
-                            )}
-                        </InputMask>
-                    </GridItem>
-                </Grid>
-                <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-                    <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Estado'
-                            name='estado'
-                            value={formData.estado}
-                            onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Cidade'
-                            name='cidade'
-                            value={formData.cidade}
-                            onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Bairro'
-                            name='bairro'
-                            value={formData.bairro}
-                            onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Rua'
-                            name='rua'
-                            value={formData.rua}
-                            onChange={handleChange}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <Input
-                            borderRadius="lg"
-                            placeholder='Número'
-                            name='numero'
-                            value={formData.numero}
-                            onChange={handleChange}
-                        />
+                        /> */}
+
                     </GridItem>
                 </Grid>
 
