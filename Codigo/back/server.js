@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "Teste123@",
   database: "petshop_do_chicao",
 });
 
@@ -46,6 +46,25 @@ app.get("/products/:id", (req, res) => {
     }
     return res.status(200).json(results);
   });
+});
+app.post("/products", (req, res) => {
+  const { produto_descricao, preco, qtde } = req.body;
+
+  const sql =
+    "INSERT INTO products ( produto_descricao, preco, qtde) VALUES (?, ?, ?)";
+  db.query(
+    sql,
+    [produto_descricao, preco, qtde],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao cadastrar funcionário:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Funcionário cadastrado com sucesso!" });
+    }
+  );
 });
 
 app.delete("/products/:id", (req, res) => {

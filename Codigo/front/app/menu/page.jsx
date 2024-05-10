@@ -18,6 +18,7 @@ import Logo from "@/app/menu/logoPet.jpg";
 import Image from "next/image";
 import ListaFuncionarios from "../funcionarios/page";
 import Agendamentos from "@/componentes/Agendamentos";
+import Estoque from "../estoque/page";
 import Vendas from "../vendas/page";
 
 const theme = extendTheme({
@@ -146,9 +147,7 @@ function App() {
           {currentScreen === "vendas" && <Vendas />}
           {currentScreen === "clientes" && <Clientes />}
           {currentScreen === "pets" && <Pets />}
-          {currentScreen === "estoque" && (
-            <Box>Conteúdo da tela de Estoque</Box>
-          )}
+          {currentScreen === "estoque" && <Estoque />}
           {currentScreen === "agendamentos" && <Agendamentos />}
           {currentScreen === "funcionarios" && <ListaFuncionarios />}
         </GridItem>

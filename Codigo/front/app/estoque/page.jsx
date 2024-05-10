@@ -11,7 +11,7 @@ import {
   } from "@nextui-org/react";
   import { FormEvent } from "react";
 
-class Dadosmestres extends React.Component{
+class Estoque extends React.Component{
 
     constructor(props){
         super(props);
@@ -19,6 +19,7 @@ class Dadosmestres extends React.Component{
         this.state = {
             produto_descricao: '',
             preco: '',
+            qtde: '',
             products : []
         }
     }
@@ -51,6 +52,7 @@ class Dadosmestres extends React.Component{
         body: JSON.stringify(produto)
         })
         .then(response =>{
+            console.log(response);
             if(response.ok){
                 this.buscarProduto();
             }else{
@@ -59,6 +61,11 @@ class Dadosmestres extends React.Component{
         })
     }
 
+    atualizaQtde = (q) =>{
+        this.setState({
+            qtde: q.target.value
+        })
+    }
 
     atualizaDescricao = (d) =>{
         this.setState({
@@ -75,10 +82,10 @@ class Dadosmestres extends React.Component{
     submit = () => {
         const produto = {
             produto_descricao: this.state.produto_descricao,
-            preco: this.state.preco
+            preco: this.state.preco,
+            qtde: this.state.qtde
         }
-
-        this.cadastraProduto();
+    this.cadastraProduto();
     }
 
 
@@ -91,6 +98,8 @@ class Dadosmestres extends React.Component{
                     <input type="text" id="fname" name="descricao" value={ this.state.produto_descricao } onChange={this.atualizaDescricao}/>
                     <label for="lname">Preço:</label>
                     <input type="text" id="lname" name="preco" value={ this.state.preco } onChange={this.atualizaPreco}/>
+                    <label for="qname">Quantidade:</label>
+                    <input type="text" id="qname" name="quantidade" value={ this.state.qtde } onChange={this.atualizaQtde}/>
                     <Button onClick={this.submit}>Adicionar</Button>
                 </form>
                 </div>
@@ -100,6 +109,7 @@ class Dadosmestres extends React.Component{
         <TableColumn>ID</TableColumn>
         <TableColumn>Descrição</TableColumn>
         <TableColumn>Preço</TableColumn>
+        <TableColumn>Quantidade</TableColumn>
         <TableColumn>Opções</TableColumn>
       </TableHeader>
       <TableBody>
@@ -109,6 +119,7 @@ class Dadosmestres extends React.Component{
                         <TableCell> {produto.idproducts} </TableCell>
                         <TableCell> {produto.produto_descricao} </TableCell>
                         <TableCell> {produto.preco} </TableCell>
+                        <TableCell> {produto.qtde} </TableCell>
                         <TableCell>  <Button>Atualizar</Button> <Button onClick={() => this.deletarProduto(produto.idproducts)}>Excluir</Button> </TableCell>
                         </TableRow>
                         )
@@ -122,4 +133,4 @@ class Dadosmestres extends React.Component{
     }
 }
 
-export default Dadosmestres;
+export default Estoque;
