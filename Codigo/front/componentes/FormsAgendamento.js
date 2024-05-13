@@ -11,6 +11,7 @@ export default function Dadosagendamentos({ agendamento }) {
         cliente: '',
         agendamento: '',
         horario: agendamento ? new Date(agendamento.start).toISOString().slice(0, 16) : '',
+        duracao: '',
         observacoes: ''
     });
 
@@ -23,20 +24,6 @@ export default function Dadosagendamentos({ agendamento }) {
     };
 
 
-    // useEffect(() => {
-    //     if (agendamento) {
-    //         setFormData({
-    //             servico: agendamento.servico || '',
-    //             cliente: agendamento.cliente || '',
-    //             agendamento: agendamento.agendamento || '',
-    //             horario: agendamento.horario || '',
-    //             observacoes: agendamento.observacoes || ''
-    //         });
-    //     } else {
-    //         clearForm();
-    //     }
-    // }, [agendamento]);
-
     useEffect(() => {
         if (agendamento) {
             setFormData({
@@ -44,12 +31,31 @@ export default function Dadosagendamentos({ agendamento }) {
                 cliente: agendamento.cliente || '',
                 pet: agendamento.pet || '',
                 horario: agendamento.horario || '',
+                duracao: agendamento.duracao || '',
                 observacoes: agendamento.observacoes || ''
             });
         } else {
             clearForm();
         }
     }, [agendamento]);
+
+    const [servicos, setServicos] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios.get("http://localhost:8081/servicos");
+            const servicoData = response.data.map((servico) => ({
+                value: servico.id,
+                label: servico.tipo,
+                duracao: servico.duracao,
+                valor: servico.valor
+            }));
+            setServicos(servicoData);
+        }
+
+        fetchData();
+    }, []);
+
 
 
     const [tutores, setTutores] = useState([]);
@@ -88,26 +94,31 @@ export default function Dadosagendamentos({ agendamento }) {
             cliente: '',
             pet: '',
             horario: '',
+            duracao: '',
             observacoes: ''
         });
     };
 
     const handleDadosagendamentosChange = (e) => {
         const { name, value } = e.target;
+        const servico = servicos.find((servico) => servico.label === value);
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
+            duracao: servico ? servico.duracao : ''
         });
     };
 
     const handleUpdate = (e) => {
         e.preventDefault();
 
+        console.log(servicos.duracao);
         const dadosagendamento = {
             servico: formData.servico,
             cliente: formData.cliente,
             pet: formData.pet,
             horario: formData.horario,
+            duracao: '00:00:30',
             observacoes: formData.observacoes
         };
 
@@ -145,13 +156,19 @@ export default function Dadosagendamentos({ agendamento }) {
             <form onSubmit={handleUpdate}>
                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                     <GridItem>
-                        <Input
+                        <Select
                             borderRadius="lg"
                             placeholder='Serviço'
                             name='servico'
                             value={formData.servico}
                             onChange={handleDadosagendamentosChange}
-                        />
+                        >
+                            {servicos.map((option) => (
+                                <option key={option.value} value={option.label}>
+                                    {option.label +  " - R$" + option.valor}
+                                </option>
+                            ))}
+                        </Select>
                     </GridItem>
                     <GridItem>
                         <Select
@@ -202,6 +219,7 @@ export default function Dadosagendamentos({ agendamento }) {
                             onChange={handleDadosagendamentosChange}
                         />
                     </GridItem>
+
                 </Grid>
 
                 <Grid marginTop={5} marginBottom={5} templateColumns="repeat(2, 1fr)" gap={6}>

@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Teste123@",
+  password: "1234",
   database: "petshop_do_chicao",
 });
 
@@ -323,13 +323,13 @@ app.get("/funcionarios/:id", (req, res) => {
   });
 });
 app.post("/agendamento", (req, res) => {
-    const { servico, cliente, pet, horario, observacoes } = req.body;
+    const { servico, cliente, pet, horario, duracao, observacoes } = req.body;
 
     const sql =
-        "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, observacoes) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, duracao, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
     db.query(
         sql,
-        [servico, cliente, pet, horario, observacoes],
+        [servico, cliente, pet, horario, duracao, observacoes],
         (err, result) => {
             if (err) {
                 console.error("Erro ao cadastrar agendamento:", err);
@@ -365,6 +365,36 @@ app.delete('/agendamento/:id', (req, res) => {
     });
 });
 
+app.get("/servicos", (req, res) => {
+    const sql = "SELECT * FROM petshop_do_chicao.servicos";
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar servico:", err);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res.status(200).json(results);
+    });
+});
+
+app.post("/servicos", (req, res) => {
+    const { tipo, duracao, valor} = req.body;
+
+    const sql =
+        "INSERT INTO petshop_do_chicao.servicos (tipo, duracao, valor) VALUES ( ?, ?, ?)";
+    db.query(
+        sql,
+        [tipo, duracao, valor],
+        (err, result) => {
+            if (err) {
+                console.error("Erro ao cadastrar servico:", err);
+                return res.status(500).json({ error: "Erro interno do servidor" });
+            }
+            return res
+                .status(201)
+                .json({ message: "Servico cadastrado com sucesso!" });
+        }
+    );
+});
 
 app.listen(8081, () => {
   console.log(`Server is running on port 8081.`);
