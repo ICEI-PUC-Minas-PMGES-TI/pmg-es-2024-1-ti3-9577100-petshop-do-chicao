@@ -25,14 +25,20 @@ export const theme = extendTheme({
       defaultProps: {
         size: 'md',
         colorScheme: 'primary'
-        
       },
     },
     Input: {
       defaultProps: {
         size: 'md',
         variant: 'filled',
-        colorScheme: ''        
+        colorScheme: ''
+      }
+    },
+    Select: {
+      defaultProps: {
+        size: 'md',
+        variant: 'filled',
+        colorScheme: ''
       }
     }
   },
