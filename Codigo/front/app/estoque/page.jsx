@@ -1,15 +1,26 @@
 'use client'
 import React from "react";
-import {
+  import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogCloseButton,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
+    Button,
+    ChakraProvider,
+    Flex,
+    Spacer,
     Table,
-    TableHeader,
-    TableBody,
-    TableColumn,
-    TableRow,
-    TableCell,
-    Button
-  } from "@nextui-org/react";
-  import { FormEvent } from "react";
+    TableContainer,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr,
+  } from "@chakra-ui/react";
 
 class Estoque extends React.Component{
 
@@ -150,34 +161,38 @@ class Estoque extends React.Component{
                     <input type="text" id="lname" name="preco" value={ this.state.preco } onChange={this.atualizaPreco}/>
                     <label for="qname">Quantidade:</label>
                     <input type="text" id="qname" name="quantidade" value={ this.state.qtde } onChange={this.atualizaQtde} readOnly={true}/>
-                    <Button onClick={this.submit}>Adicionar</Button>
-                    <Button onClick={this.reset}>Novo</Button>
+                    <Button colorScheme='green' onClick={this.submit}>Adicionar</Button>
+                    <Button colorScheme='blue'onClick={this.reset}>Novo</Button>
                 </form>
                 </div>
                 <div>Tabela de Produtos</div>
+                <TableContainer>
             <Table aria-label="Example table with dynamic content">
-            <TableHeader>
-        <TableColumn>ID</TableColumn>
-        <TableColumn>Descrição</TableColumn>
-        <TableColumn>Preço</TableColumn>
-        <TableColumn>Quantidade</TableColumn>
-        <TableColumn>Opções</TableColumn>
-      </TableHeader>
-      <TableBody>
+            <Thead>
+                <Tr>
+        <Th>ID</Th>
+        <Th>Descrição</Th>
+        <Th>Preço</Th>
+        <Th>Quantidade</Th>
+        <Th>Opções</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
       {
                         this.state.products.map((produto) =>
-                        <TableRow>
-                        <TableCell> {produto.id} </TableCell>
-                        <TableCell> {produto.produto_descricao} </TableCell>
-                        <TableCell> {produto.preco} </TableCell>
-                        <TableCell> {produto.qtde} </TableCell>
-                        <TableCell>  <Button onClick={() => this.carregarDados(produto.id)}>Atualizar</Button>
-                         <Button onClick={() => this.deletarProduto(produto.id)}>Excluir</Button> </TableCell>
-                        </TableRow>
+                        <Tr>
+                        <Td> {produto.id} </Td>
+                        <Td> {produto.produto_descricao} </Td>
+                        <Td> {produto.preco} </Td>
+                        <Td> {produto.qtde} </Td>
+                        <Td>  <Button onClick={() => this.carregarDados(produto.id)}>Atualizar</Button>
+                         <Button colorScheme='red' onClick={() => this.deletarProduto(produto.id)}>Excluir</Button> </Td>
+                        </Tr>
                         )
                     }
-      </TableBody>
+      </Tbody>
     </Table>
+    </TableContainer>
             </div>
             
             
