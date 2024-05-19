@@ -183,7 +183,7 @@ export default function Vendas() {
           <AlertDialogHeader>Efetuar Venda</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
-            <FormVendas />
+            <FormVendas button={<Button width="100%">Efetuar Venda</Button>}/>
           </AlertDialogBody>
         </AlertDialogContent>
       </AlertDialog>
