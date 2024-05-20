@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Teste123@",
+  password: "1234",
   database: "petshop_do_chicao",
 });
 
@@ -197,31 +197,46 @@ app.delete("/vendas/:id", (req, res) => {
   });
 });
 
-app.get("/itensvenda", (req, res) => {
-  const sql = "SELECT * FROM itensvenda";
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error("Erro ao buscar itens de venda:", err);
-      return res.status(500).json({ error: "Erro interno do servidor" });
-    }
-    return res.status(200).json(results);
+app.get('/itensvenda/:idvenda', (req, res) => {
+  const idVenda = req.params.idvenda;
+  const sql = `
+      SELECT 
+          i.id AS item_id,
+          p.produto_descricao,
+          i.qtde,
+          i.valorunitario,
+          (i.qtde * i.valorunitario) AS valortotal_item
+      FROM 
+          itensvenda i
+      JOIN 
+          products p ON i.idproduto = p.id
+      WHERE 
+          i.idvenda = ?;
+  `;
+  
+  db.query(sql, [idVenda], (err, results) => {
+      if (err) {
+          console.error('Erro ao buscar itens de venda:', err);
+          return res.status(500).json({ error: 'Erro interno do servidor' });
+      }
+      res.status(200).json(results);
   });
 });
 
-app.get("/itensvenda/:id", (req, res) => {
-  const { id } = req.params;
-  const sql = "SELECT * FROM itensvenda WHERE id = ?";
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error("Erro ao buscar item de venda:", err);
-      return res.status(500).json({ error: "Erro interno do servidor" });
-    }
-    if (result.length === 0) {
-      return res.status(404).json({ message: "Item de venda não encontrado" });
-    }
-    return res.status(200).json(result[0]);
-  });
-});
+// app.get("/itensvenda/:id", (req, res) => {
+//   const { id } = req.params;
+//   const sql = "SELECT * FROM itensvenda WHERE id = ?";
+//   db.query(sql, [id], (err, result) => {
+//     if (err) {
+//       console.error("Erro ao buscar item de venda:", err);
+//       return res.status(500).json({ error: "Erro interno do servidor" });
+//     }
+//     if (result.length === 0) {
+//       return res.status(404).json({ message: "Item de venda não encontrado" });
+//     }
+//     return res.status(200).json(result[0]);
+//   });
+// });
 
 app.post("/pets", (req, res) => {
   const { nome, raca, temperamento, idade, observacoes, tutor } = req.body;

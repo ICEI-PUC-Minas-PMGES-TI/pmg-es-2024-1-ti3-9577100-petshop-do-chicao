@@ -17,7 +17,7 @@
     "@emotion/styled": "^11.11.5",
     "@fullcalendar/core": "^6.1.11",
     "@nextui-org/react": "^2.2.10",
-    "axios": "^1.6.8",
+    "axios": "^1.7.1",
     "boxicons": "^2.1.4",
     "chakra-dayzed-datepicker": "^0.2.0",
     "dayzed": "^3.2.3",

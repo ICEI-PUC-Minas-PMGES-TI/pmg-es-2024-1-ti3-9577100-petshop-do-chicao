@@ -1,14 +1,8 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Container, Input, Grid, GridItem, Text } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableContainer, Button, Flex, Spacer, AlertDialog, AlertDialogBody, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure } from '@chakra-ui/react';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbSeparator,
-} from '@chakra-ui/react'
+import axios from 'axios';
+import { Container, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
 
 export default function DadosVenda({ venda }) {
     const [itens, setItens] = useState([]);
@@ -21,22 +15,27 @@ export default function DadosVenda({ venda }) {
 
     useEffect(() => {
         const fetchItens = async () => {
-            try {
-                const response = await axios.get('http://localhost:8081/itensvenda');
+            if (venda && venda.id) {
+                try {
+                    const response = await axios.get(`http://localhost:8081/itensvenda/${venda.id}`);
+                    console.log('API response data:', response.data);
 
-                const itensFormatados = response.data.map(item => ({
-                    id: item.id,
-                    quantidade: item.qtde,
-                    valorUnitario: item.valorunitario
-                }));
-                setItens(itensFormatados);
-            } catch (error) {
-                console.error('Erro ao buscar Itens:', error);
+                    const itensFormatados = response.data.map(item => ({
+                        id: item.item_id,
+                        descricao: item.produto_descricao,
+                        quantidade: item.qtde,
+                        valorUnitario: item.valorunitario
+                    }));
+                    console.log('Formatted items:', itensFormatados);
+                    setItens(itensFormatados);
+                } catch (error) {
+                    console.error('Erro ao buscar Itens:', error);
+                }
             }
         };
 
         fetchItens();
-    }, []);
+    }, [venda]);
 
     useEffect(() => {
         if (venda) {
@@ -70,19 +69,27 @@ export default function DadosVenda({ venda }) {
                 <Table size='sm'>
                     <Thead>
                         <Tr>
-                            <Th>id</Th>
+                            <Th>ID</Th>
                             <Th>Nome</Th>
                             <Th isNumeric>Valor Uni</Th>
                             <Th isNumeric>Quantidade</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
+                        {itens.length > 0 ? (
+                            itens.map(item => (
+                                <Tr key={item.id}>
+                                    <Td>{item.id}</Td>
+                                    <Td>{item.descricao}</Td>
+                                    <Td isNumeric>R$ {item.valorUnitario}</Td>
+                                    <Td isNumeric>{item.quantidade}</Td>
+                                </Tr>
+                            ))
+                        ) : (
                             <Tr>
-                                <Td>xxxx</Td>
-                                <Td>xxxx</Td>
-                                <Td>xxxx</Td>
-                                <Td>xxxx</Td>
+                                <Td colSpan="4" textAlign="center">Nenhum item encontrado</Td>
                             </Tr>
+                        )}
                     </Tbody>
                 </Table>
             </TableContainer>
