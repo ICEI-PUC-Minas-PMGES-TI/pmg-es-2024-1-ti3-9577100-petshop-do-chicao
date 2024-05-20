@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Container, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Flex, Spacer, AlertDialog, AlertDialogBody, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure } from '@chakra-ui/react';
 import axios from 'axios';
 import DadosVenda from './DadosVenda';
+import FormVendas from './FormVendas';
 
 export default function Vendas() {
     const [vendas, setVendas] = useState([]);
@@ -18,7 +19,7 @@ export default function Vendas() {
                 const vendasFormatadas = response.data.map(venda => ({
                     ...venda,
                     dataFormatada: new Date(venda.data).toLocaleDateString(),
-                    horaFormatada: new Date(venda.data).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    horaFormatada: new Date(venda.data).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     valorFormatado: venda.valortotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) // Formata o valor total
                 }));
                 setVendas(vendasFormatadas);
@@ -45,7 +46,7 @@ export default function Vendas() {
             <Flex marginBottom='15px'>
                 <Spacer />
                 <Button colorScheme='red' size='md' borderRadius='lg' onClick={onOpen}>
-                    Nova Venda
+                    Efetuar venda
                 </Button>
             </Flex>
 
@@ -88,6 +89,23 @@ export default function Vendas() {
                     </AlertDialogBody>
                 </AlertDialogContent>
             </AlertDialog>
-        </Container>
+
+            <AlertDialog
+                motionPreset="slideInBottom"
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+                isOpen={isOpen}
+                isCentered
+            >
+                <AlertDialogOverlay />
+                <AlertDialogContent>
+                    <AlertDialogHeader>Efetuar Venda</AlertDialogHeader>
+                    <AlertDialogCloseButton />
+                    <AlertDialogBody>
+                        <FormVendas button={<Button width="100%">Efetuar Venda</Button>} />
+                    </AlertDialogBody>
+                </AlertDialogContent>
+            </AlertDialog>
+        </Container >
     );
 }
