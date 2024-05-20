@@ -10,7 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "1234",
+  password: "Teste123@",
   database: "petshop_do_chicao",
 });
 
@@ -38,7 +38,7 @@ app.get("/products", (req, res) => {
 });
 app.get("/products/:id", (req, res) => {
   const { id } = req.params;
-  const sql = "SELECT * FROM products WHERE idproducts = ?";
+  const sql = "SELECT * FROM products WHERE id = ?";
   db.query(sql, [id], (err, results) => {
     if (err) {
       console.error("Erro ao buscar produtos:", err);
@@ -69,13 +69,27 @@ app.post("/products", (req, res) => {
 
 app.delete("/products/:id", (req, res) => {
   const { id } = req.params;
-  const sql = "DELETE FROM products WHERE idproducts = ?";
+  const sql = "DELETE FROM products WHERE id = ?";
   db.query(sql, [id], (err, result) => {
     if (err) {
       console.error("Erro ao excluir produtos :", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
     return res.status(200).json({ message: "Cliente excluído com sucesso!" });
+  });
+});
+
+app.put("/products/:id", (req, res) => {
+  const { id } = req.params;
+  const { produto_descricao, preco, qtde } = req.body;
+  const sql =
+    "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ? WHERE id = ?";
+  db.query(sql, [produto_descricao, preco, qtde, id], (err, result) => {
+    if (err) {
+      console.error("Erro ao atualizar produto:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Cliente atualizado com sucesso!" });
   });
 });
 
