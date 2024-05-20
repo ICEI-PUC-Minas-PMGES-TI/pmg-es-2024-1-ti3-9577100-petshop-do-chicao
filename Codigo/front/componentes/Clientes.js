@@ -65,7 +65,7 @@ export default function Clientes() {
                         <AlertDialogHeader>Cadastro de cliente</AlertDialogHeader>
                         <AlertDialogCloseButton />
                         <AlertDialogBody>
-                            <FormCliente/>
+                            <FormCliente />
                         </AlertDialogBody>
                     </AlertDialogContent>
                 </AlertDialog>

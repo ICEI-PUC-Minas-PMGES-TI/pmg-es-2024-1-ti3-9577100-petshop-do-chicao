@@ -146,42 +146,68 @@ app.delete("/clientes/:id", (req, res) => {
 });
 
 app.get("/vendas", (req, res) => {
-    const sql = "SELECT * FROM vendas";
-    db.query(sql, (err, results) => {
-      if (err) {
-        console.error("Erro ao buscar vendas:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
-      }
-      return res.status(200).json(results);
-    });
+  const sql = "SELECT * FROM vendas";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar vendas:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
   });
-  
-  app.get("/vendas/:id", (req, res) => {
-    const { id } = req.params;
-    const sql = "SELECT * FROM vendas WHERE idvendas = ?";
-    db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Erro ao buscar venda:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
-      }
-      if (result.length === 0) {
-        return res.status(404).json({ message: "Venda não encontrada" });
-      }
-      return res.status(200).json(result[0]);
-    });
+});
+
+app.get("/vendas/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM clientes WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao buscar venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Venda não encontrada" });
+    }
+    return res.status(200).json(result[0]);
   });
-  
-  app.delete("/vendas/:id", (req, res) => {
-    const { id } = req.params;
-    const sql = "DELETE FROM vendas WHERE idvendas = ?";
-    db.query(sql, [id], (err, result) => {
-      if (err) {
-        console.error("Erro ao excluir cliente:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
-      }
-      return res.status(200).json({ message: "Cliente excluído com sucesso!" });
-    });
+});
+
+app.delete("/vendas/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM vendas WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao excluir venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Venda excluída com sucesso!" });
   });
+});
+
+app.get("/itensvenda", (req, res) => {
+  const sql = "SELECT * FROM itensvenda";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar itens de venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
+});
+
+app.get("/itensvenda/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM itensvenda WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao buscar item de venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Item de venda não encontrado" });
+    }
+    return res.status(200).json(result[0]);
+  });
+});
 
 app.post("/pets", (req, res) => {
   const { nome, raca, temperamento, idade, observacoes, tutor } = req.body;
@@ -201,54 +227,54 @@ app.post("/pets", (req, res) => {
 });
 
 app.get('/pets', (req, res) => {
-    const sql = 'SELECT * FROM petshop_do_chicao.pets';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Erro ao buscar pets:', err);
-            return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        return res.status(200).json(results);
-    });
+  const sql = 'SELECT * FROM petshop_do_chicao.pets';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar pets:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    return res.status(200).json(results);
+  });
 });
 
 app.get('/pets/:id', (req, res) => {
-    const { id } = req.params;
-    const sql = 'SELECT * FROM petshop_do_chicao.pets WHERE id = ?';
-    db.query(sql, [id], (err, result) => {
-        if (err) {
-            console.error('Erro ao buscar pet:', err);
-            return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        if (result.length === 0) {
-            return res.status(404).json({ message: 'Pet não encontrado' });
-        }
-        return res.status(200).json(result[0]);
-    });
+  const { id } = req.params;
+  const sql = 'SELECT * FROM petshop_do_chicao.pets WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar pet:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'Pet não encontrado' });
+    }
+    return res.status(200).json(result[0]);
+  });
 });
 
 app.put('/pets/:id', (req, res) => {
-    const { id } = req.params;
-    const { nome, raca, temperamento, idade,  observacoes, tutor } = req.body;
-    const sql = 'UPDATE petshop_do_chicao.pets SET nome = ?, raca = ?, temperamento = ?, idade = ?, observacoes = ?, tutor = ? WHERE id = ?';
-    db.query(sql, [nome, raca, temperamento, idade,  observacoes, tutor, id], (err, result) => {
-        if (err) {
-            console.error('Erro ao atualizar pet:', err);
-            return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        return res.status(200).json({ message: 'Pet atualizado com sucesso!' });
-    });
+  const { id } = req.params;
+  const { nome, raca, temperamento, idade, observacoes, tutor } = req.body;
+  const sql = 'UPDATE petshop_do_chicao.pets SET nome = ?, raca = ?, temperamento = ?, idade = ?, observacoes = ?, tutor = ? WHERE id = ?';
+  db.query(sql, [nome, raca, temperamento, idade, observacoes, tutor, id], (err, result) => {
+    if (err) {
+      console.error('Erro ao atualizar pet:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    return res.status(200).json({ message: 'Pet atualizado com sucesso!' });
+  });
 });
 
 app.delete('/pets/:id', (req, res) => {
-    const { id } = req.params;
-    const sql = 'DELETE FROM petshop_do_chicao.pets WHERE id = ?';
-    db.query(sql, [id], (err, result) => {
-        if (err) {
-            console.error('Erro ao excluir pet:', err);
-            return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        return res.status(200).json({ message: 'Pet excluído com sucesso!' });
-    });
+  const { id } = req.params;
+  const sql = 'DELETE FROM petshop_do_chicao.pets WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao excluir pet:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    return res.status(200).json({ message: 'Pet excluído com sucesso!' });
+  });
 });
 
 app.post("/funcionarios", (req, res) => {
@@ -323,77 +349,77 @@ app.get("/funcionarios/:id", (req, res) => {
   });
 });
 app.post("/agendamento", (req, res) => {
-    const { servico, cliente, pet, horario, duracao, observacoes } = req.body;
+  const { servico, cliente, pet, horario, duracao, observacoes } = req.body;
 
-    const sql =
-        "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, duracao, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
-    db.query(
-        sql,
-        [servico, cliente, pet, horario, duracao, observacoes],
-        (err, result) => {
-            if (err) {
-                console.error("Erro ao cadastrar agendamento:", err);
-                return res.status(500).json({ error: "Erro interno do servidor" });
-            }
-            return res
-                .status(201)
-                .json({ message: "Agendamento cadastrado com sucesso!" });
-        }
-    );
+  const sql =
+    "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, duracao, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+  db.query(
+    sql,
+    [servico, cliente, pet, horario, duracao, observacoes],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao cadastrar agendamento:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Agendamento cadastrado com sucesso!" });
+    }
+  );
 });
 
 app.get("/agendamento", (req, res) => {
-    const sql = "SELECT * FROM petshop_do_chicao.agendamento";
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar agendamento:", err);
-            return res.status(500).json({ error: "Erro interno do servidor" });
-        }
-        return res.status(200).json(results);
-    });
+  const sql = "SELECT * FROM petshop_do_chicao.agendamento";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar agendamento:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
 });
 
 app.delete('/agendamento/:id', (req, res) => {
-    const { id } = req.params;
-    const sql = 'DELETE FROM petshop_do_chicao.agendamento WHERE id = ?';
-    db.query(sql, [id], (err, result) => {
-        if (err) {
-            console.error('Erro ao excluir agendamento:', err);
-            return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        return res.status(200).json({ message: 'Pet excluído com sucesso!' });
-    });
+  const { id } = req.params;
+  const sql = 'DELETE FROM petshop_do_chicao.agendamento WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao excluir agendamento:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    return res.status(200).json({ message: 'Pet excluído com sucesso!' });
+  });
 });
 
 app.get("/servicos", (req, res) => {
-    const sql = "SELECT * FROM petshop_do_chicao.servicos";
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar servico:", err);
-            return res.status(500).json({ error: "Erro interno do servidor" });
-        }
-        return res.status(200).json(results);
-    });
+  const sql = "SELECT * FROM petshop_do_chicao.servicos";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar servico:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
 });
 
 app.post("/servicos", (req, res) => {
-    const { tipo, duracao, valor} = req.body;
+  const { tipo, duracao, valor } = req.body;
 
-    const sql =
-        "INSERT INTO petshop_do_chicao.servicos (tipo, duracao, valor) VALUES ( ?, ?, ?)";
-    db.query(
-        sql,
-        [tipo, duracao, valor],
-        (err, result) => {
-            if (err) {
-                console.error("Erro ao cadastrar servico:", err);
-                return res.status(500).json({ error: "Erro interno do servidor" });
-            }
-            return res
-                .status(201)
-                .json({ message: "Servico cadastrado com sucesso!" });
-        }
-    );
+  const sql =
+    "INSERT INTO petshop_do_chicao.servicos (tipo, duracao, valor) VALUES ( ?, ?, ?)";
+  db.query(
+    sql,
+    [tipo, duracao, valor],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao cadastrar servico:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Servico cadastrado com sucesso!" });
+    }
+  );
 });
 
 app.listen(8081, () => {
