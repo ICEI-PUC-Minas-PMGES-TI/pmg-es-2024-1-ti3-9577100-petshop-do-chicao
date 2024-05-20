@@ -185,6 +185,26 @@ app.get("/vendas/:id", (req, res) => {
   });
 });
 
+app.post("/vendas", (req, res) => {
+  const { data, idcliente, valortotal, tipopagamento } = req.body;
+
+  const sql = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
+
+  db.query(
+    sql,
+    [data, idcliente, valortotal, tipopagamento],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao cadastrar venda:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Vendas cadastrado com sucesso!" });
+    }
+  );
+});
+
 app.delete("/vendas/:id", (req, res) => {
   const { id } = req.params;
   const sql = "DELETE FROM vendas WHERE id = ?";

@@ -67,6 +67,28 @@ export default function Vendas() {
     setIsOpenDadosVenda(false);
   };
 
+  const handleSubmitVenda = () => {
+    const dadosVenda = {
+      data: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      idcliente:
+        document.getElementById("clientes").options[
+          document.getElementById("clientes").selectedIndex
+        ].id,
+      valortotal: document.getElementById("valorTotal").value.replace("R$ ", ""),
+      tipopagamento: document.getElementById("tipoPagamento").value,
+    };
+
+    axios
+      .post("http://localhost:8081/vendas", dadosVenda)
+      .then((response) => {
+        console.log("Resposta do backend:", response.data);
+        // setForm(initialState);
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar formulário:", error);
+      });
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Flex marginBottom="15px">
@@ -133,7 +155,13 @@ export default function Vendas() {
           <AlertDialogHeader>Efetuar Venda</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
-            <FormVendas button={<Button width="100%">Efetuar Venda</Button>} />
+            <FormVendas
+              button={
+                <Button width="100%" onClick={handleSubmitVenda}>
+                  Efetuar Venda
+                </Button>
+              }
+            />
           </AlertDialogBody>
         </AlertDialogContent>
       </AlertDialog>
