@@ -186,23 +186,55 @@ app.get("/vendas/:id", (req, res) => {
 });
 
 app.post("/vendas", (req, res) => {
-  const { data, idcliente, valortotal, tipopagamento } = req.body;
+  const { data, idcliente, valortotal, tipopagamento, itens } = req.body;
 
-  const sql = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
-
-  db.query(
-    sql,
-    [data, idcliente, valortotal, tipopagamento],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar venda:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
-      }
-      return res
-        .status(201)
-        .json({ message: "Vendas cadastrado com sucesso!" });
+  const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
+  db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento], (err, result) => {
+    if (err) {
+      console.error("Erro ao cadastrar venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
-  );
+    
+    const vendaId = result.insertId;
+
+    const itensVendaPromises = itens.map(item => {
+      const sqlItemVenda = "INSERT INTO itensvenda (idvenda, idproduto, qtde, valorunitario) VALUES (?, ?, ?, ?)";
+      return new Promise((resolve, reject) => {
+        db.query(sqlItemVenda, [vendaId, item.idproduto, item.qtde, item.valorunitario], (err, result) => {
+          if (err) {
+            console.error("Erro ao cadastrar item de venda:", err);
+            return reject(err);
+          }
+          resolve();
+        });
+      });
+    });
+
+    Promise.all(itensVendaPromises)
+      .then(() => {
+        const updateStockPromises = itens.map(item => {
+          const sqlUpdateStock = "UPDATE products SET qtde = qtde - ? WHERE id = ?";
+          return new Promise((resolve, reject) => {
+            db.query(sqlUpdateStock, [item.qtde, item.idproduto], (err, result) => {
+              if (err) {
+                console.error("Erro ao atualizar estoque:", err);
+                return reject(err);
+              }
+              resolve();
+            });
+          });
+        });
+
+        return Promise.all(updateStockPromises);
+      })
+      .then(() => {
+        res.status(201).json({ message: "Venda cadastrada com sucesso!" });
+      })
+      .catch(err => {
+        console.error("Erro ao processar venda:", err);
+        res.status(500).json({ error: "Erro interno do servidor" });
+      });
+  });
 });
 
 app.delete("/vendas/:id", (req, res) => {
@@ -217,29 +249,28 @@ app.delete("/vendas/:id", (req, res) => {
   });
 });
 
-app.get('/itensvenda/:idvenda', (req, res) => {
-  const idVenda = req.params.idvenda;
+app.get("/itensvenda/:idvenda", (req, res) => {
+  const { idvenda } = req.params;
   const sql = `
-      SELECT 
-          i.id AS item_id,
-          p.produto_descricao,
-          i.qtde,
-          i.valorunitario,
-          (i.qtde * i.valorunitario) AS valortotal_item
-      FROM 
-          itensvenda i
-      JOIN 
-          products p ON i.idproduto = p.id
-      WHERE 
-          i.idvenda = ?;
+    SELECT 
+      i.id AS item_id,
+      p.produto_descricao,
+      i.qtde,
+      i.valorunitario,
+      (i.qtde * i.valorunitario) AS valortotal_item
+    FROM 
+      itensvenda i
+    JOIN 
+      products p ON i.idproduto = p.id
+    WHERE 
+      i.idvenda = ?;
   `;
-  
-  db.query(sql, [idVenda], (err, results) => {
-      if (err) {
-          console.error('Erro ao buscar itens de venda:', err);
-          return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-      res.status(200).json(results);
+  db.query(sql, [idvenda], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar itens de venda:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
   });
 });
 

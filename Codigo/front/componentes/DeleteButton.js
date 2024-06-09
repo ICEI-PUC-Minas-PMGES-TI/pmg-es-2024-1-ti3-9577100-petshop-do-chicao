@@ -20,7 +20,7 @@ function DeleteButton({ cliente, limparFormulario, handleDelete }) {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Deletar Cliente
+              Deletar
             </AlertDialogHeader>
 
             <AlertDialogBody>
