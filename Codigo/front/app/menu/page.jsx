@@ -20,6 +20,7 @@ import ListaFuncionarios from "../funcionarios/page";
 import Agendamentos from "@/componentes/Agendamentos";
 import Estoque from "../estoque/page";
 import Vendas from "../vendas/page";
+import Caixa from "../caixa/page";
 
 const theme = extendTheme({
   styles: {
@@ -143,7 +144,7 @@ function App() {
           </Stack>
         </GridItem>
         <GridItem pl="2" area={"main"} h="auto" margin={5}>
-          {currentScreen === "caixa" && <Box>Conteúdo da tela de Caixa</Box>}
+          {currentScreen === "caixa" && <Caixa />}
           {currentScreen === "vendas" && <Vendas />}
           {currentScreen === "clientes" && <Clientes />}
           {currentScreen === "pets" && <Pets />}
