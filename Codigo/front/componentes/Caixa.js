@@ -26,10 +26,11 @@ import {
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
 import { theme } from "@/app/theme";
+import ListaVendas from "./ListaVendas";
 
 export default function Caixa() {
   const [caixas, setCaixas] = useState([]);
-  const [vendas, setVendas] = useState([]);
+  const [caixaSelecionado, setCaixaSelecionado] = useState(null);
   const cancelRef = useRef();
   const {
     isOpen: isCreateOpen,
@@ -70,22 +71,14 @@ export default function Caixa() {
       });
   };
 
-  function handleCaixaClick(id) {
-    axios
-      .get(`http://localhost:8081/caixa/${id}`)
-      .then((response) => {
-        console.log(response.data)
-        setVendas(response.data)
-      })
-      .catch((error) => {
-        console.error("Erro ao abrir caixa:", error);
-      });
+  function handleCaixaClick(caixa) {
+    setCaixaSelecionado(caixa);
     onCaixaOpen();
   }
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex>
+      <Flex marginBottom="15px">
         <InputGroup width="auto">
           <Input placeholder="Pesquisar" />
           <InputRightElement pointerEvents="none">
@@ -96,7 +89,12 @@ export default function Caixa() {
         <Button onClick={onCreateOpen}>Abrir Caixa</Button>
       </Flex>
 
-      <TableContainer paddingTop="14px">
+      <TableContainer
+        border="1px"
+        borderColor="gray.200"
+        borderRadius="lg"
+        padding="10px"
+      >
         <Table variant="striped">
           <Thead>
             <Tr>
@@ -108,9 +106,9 @@ export default function Caixa() {
           </Thead>
           <Tbody>
             {caixas.map((caixa) => (
-              <Tr key={caixa.id} onClick={() => handleCaixaClick(caixa.id)}>
-                <Td>{caixa.dataabertura}</Td>
-                <Td>{caixa.datafechamento}</Td>
+              <Tr key={caixa.id} onClick={() => handleCaixaClick(caixa)}>
+                <Td>{new Date(caixa.dataabertura).toLocaleString()}</Td>
+                <Td>{caixa.datafechamento == null ? "" : new Date(caixa.datafechamento).toLocaleString()}</Td>
                 <Td>{caixa.isopen == 0 ? "Fechado" : "Aberto"}</Td>
                 <Td isNumeric>R$ {caixa.valortotal}</Td>
               </Tr>
@@ -153,36 +151,7 @@ export default function Caixa() {
             <AlertDialogHeader>Caixa</AlertDialogHeader>
             <AlertDialogCloseButton />
             <AlertDialogBody>
-              <TableContainer paddingTop="14px">
-                <Table variant="striped">
-                  <Thead>
-                    <Tr>
-                      <Th>Id</Th>
-                      <Th>Data</Th>
-                      <Th>Forma Pagamento</Th>
-                      <Th isNumeric>Valor Total</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {vendas.length > 0 ? (
-                      vendas.map((venda) => (
-                        <Tr key={venda.id}>
-                          <Td>{venda.id}</Td>
-                          <Td>{venda.data}</Td>
-                          <Td>{venda.tipopagamento}</Td>
-                          <Td isNumeric>R$ {venda.valortotal}</Td>
-                        </Tr>
-                      ))
-                    ) : (
-                      <Tr>
-                        <Td colSpan="4" textAlign="center">
-                          Nenhum item encontrado
-                        </Td>
-                      </Tr>
-                    )}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+              <ListaVendas caixa={caixaSelecionado} />
             </AlertDialogBody>
             <AlertDialogFooter />
           </AlertDialogContent>

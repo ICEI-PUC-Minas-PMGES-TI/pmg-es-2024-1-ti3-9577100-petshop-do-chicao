@@ -50,7 +50,7 @@ export default function ListaFuncionarios() {
     onOpen: onDeleteOpen,
     onClose: onDeleteClose,
   } = useDisclosure();
-  const cancelRef = useRef()
+  const cancelRef = useRef();
 
   useEffect(() => {
     return () => {
@@ -133,7 +133,7 @@ export default function ListaFuncionarios() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex>
+      <Flex marginBottom="15px">
         <InputGroup width="auto">
           <Input placeholder="Pesquisar" />
           <InputRightElement pointerEvents="none">
@@ -143,7 +143,12 @@ export default function ListaFuncionarios() {
         <Spacer />
         <Button onClick={onCreateOpen}>Novo Funcionário</Button>
       </Flex>
-      <TableContainer paddingTop="14px">
+      <TableContainer
+        border="1px"
+        borderColor="gray.200"
+        borderRadius="lg"
+        padding="10px"
+      >
         <Table variant="striped">
           <Thead>
             <Tr>
@@ -215,8 +220,12 @@ export default function ListaFuncionarios() {
               Tem certeza? Esta ação não pode ser desfeita.
             </AlertDialogBody>
             <AlertDialogFooter>
-              <Button variant="outline" ref={cancelRef} onClick={onDeleteClose}>Cancelar</Button>
-              <Button onClick={handleDelete} ml={3}>Excluír</Button>
+              <Button variant="outline" ref={cancelRef} onClick={onDeleteClose}>
+                Cancelar
+              </Button>
+              <Button onClick={handleDelete} ml={3}>
+                Excluír
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

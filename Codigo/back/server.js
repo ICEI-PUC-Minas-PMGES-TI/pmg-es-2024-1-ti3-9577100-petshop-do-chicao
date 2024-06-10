@@ -690,7 +690,7 @@ app.delete("/caixa/:id", (req, res) => {
 app.get("/caixa/:idcaixa", (req, res) => {
   const { idcaixa } = req.params;
   const sql = `
-    SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = 1;
+    SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = ?;
   `;
   db.query(sql, [idcaixa], (err, results) => {
     if (err) {
