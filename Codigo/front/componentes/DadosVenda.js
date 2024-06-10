@@ -19,12 +19,12 @@ export default function DadosVenda({ venda }) {
                 try {
                     const response = await axios.get(`http://localhost:8081/itensvenda/${venda.id}`);
                     console.log('API response data:', response.data);
-
+        
                     const itensFormatados = response.data.map(item => ({
                         id: item.item_id,
                         descricao: item.produto_descricao,
                         quantidade: item.qtde,
-                        valorUnitario: item.valorunitario
+                        valorUnitario: item.preco
                     }));
                     console.log('Formatted items:', itensFormatados);
                     setItens(itensFormatados);

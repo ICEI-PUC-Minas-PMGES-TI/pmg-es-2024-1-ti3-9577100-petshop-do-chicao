@@ -32,27 +32,24 @@ export default function FormCliente() {
     };
 
     const handleCEPChange = (e) => {
-        const cep = e.target.value.replace(/\D/g, '');
-        setFormData({
-            ...formData,
-            cep: cep
-        });
-
-        if (cep.length === 8) {
-            axios.get(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => {
-                    const { data } = response;
+        const cepReplaced = e.target.value.replace(/\D/g, "");
+        if (cepReplaced.length === 8) {
+            axios
+                .get(`https://viacep.com.br/ws/${cepReplaced}/json/`)
+                .then((response) => {
                     setFormData({
                         ...formData,
-                        estado: data.uf,
-                        cidade: data.localidade,
-                        bairro: data.bairro,
-                        rua: data.logradouro
+                        cep: response.data.cep,
+                        estado: response.data.uf,
+                        cidade: response.data.localidade,
+                        bairro: response.data.bairro,
+                        rua: response.data.logradouro,
                     });
                 })
-                .catch(error => {
-                    console.error('Erro ao buscar CEP:', error);
+                .catch((error) => {
+                    console.error("Erro ao buscar CEP:", error);
                 });
+            
         }
     };
 

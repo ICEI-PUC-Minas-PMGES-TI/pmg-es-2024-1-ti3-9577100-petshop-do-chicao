@@ -30,24 +30,29 @@ export default function Vendas() {
   const [isOpenDadosVenda, setIsOpenDadosVenda] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+  const [idCliente, setIdCliente] = useState("");
+  const [tipoPagamento, setTipoPagamento] = useState("");
+  const [itensVenda, setItensVenda] = useState([]);
 
   useEffect(() => {
     const fetchVendas = async () => {
       try {
         const response = await axios.get("http://localhost:8081/vendas");
 
-        const vendasFormatadas = response.data.map((venda) => ({
-          ...venda,
-          dataFormatada: new Date(venda.data).toLocaleDateString(),
-          horaFormatada: new Date(venda.data).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          valorFormatado: venda.valortotal.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }), // Formata o valor total
-        }));
+        const vendasFormatadas = response.data
+          ? response.data.map((venda) => ({
+              ...venda,
+              dataFormatada: new Date(venda.data).toLocaleDateString(),
+              horaFormatada: new Date(venda.data).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              valorFormatado: venda.valortotal.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }), // Formata o valor total
+            }))
+          : [];
         setVendas(vendasFormatadas);
       } catch (error) {
         console.error("Erro ao buscar vendas:", error);
@@ -68,21 +73,23 @@ export default function Vendas() {
   };
 
   const handleSubmitVenda = () => {
+    const dataHora = new Date();
+    const dataHoraFormatada = dataHora.toISOString().slice(0, 19).replace('T', ' '); // Formato 'YYYY-MM-DD HH:MM:SS'
+
     const dadosVenda = {
-      data: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      idcliente:
-        document.getElementById("clientes").options[
-          document.getElementById("clientes").selectedIndex
-        ].id,
-      valortotal: document.getElementById("valorTotal").value.replace("R$ ", ""),
-      tipopagamento: document.getElementById("tipoPagamento").value,
+      data: dataHoraFormatada, // Usa o formato compatível com MySQL
+      idcliente: parseInt(idCliente),
+      tipopagamento: tipoPagamento,
+      itens: itensVenda,
     };
 
     axios
       .post("http://localhost:8081/vendas", dadosVenda)
       .then((response) => {
         console.log("Resposta do backend:", response.data);
-        // setForm(initialState);
+        setIdCliente("");
+        setTipoPagamento("");
+        setItensVenda([]);
       })
       .catch((error) => {
         console.error("Erro ao enviar formulário:", error);
@@ -156,6 +163,10 @@ export default function Vendas() {
           <AlertDialogCloseButton />
           <AlertDialogBody>
             <FormVendas
+              setIdCliente={setIdCliente}
+              setTipoPagamento={setTipoPagamento}
+              itensVenda={itensVenda}
+              setItensVenda={setItensVenda}
               button={
                 <Button width="100%" onClick={handleSubmitVenda}>
                   Efetuar Venda

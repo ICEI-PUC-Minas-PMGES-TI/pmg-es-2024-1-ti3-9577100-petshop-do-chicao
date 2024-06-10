@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Container, Flex, Spacer, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, useDisclosure } from '@chakra-ui/react';
 import axios from 'axios';
 import DadosProduto from './DadosProduto';
+import FormProduto from './FormProduto'
 
 export default function Estoque() {
     const [produtos, setProdutos] = useState([]);
@@ -53,15 +54,7 @@ export default function Estoque() {
                         <AlertDialogHeader>Cadastro de produto</AlertDialogHeader>
                         <AlertDialogCloseButton />
                         <AlertDialogBody>
-                            <form>
-                                <label htmlFor="produto_descricao">Descrição:</label>
-                                <Input type="text" id="produto_descricao" name="descricao" />
-                                <label htmlFor="preco">Preço:</label>
-                                <Input type="text" id="preco" name="preco" />
-                                <label htmlFor="qtde">Quantidade:</label>
-                                <Input type="text" id="qtde" name="quantidade" />
-                                <Button colorScheme='green' type="submit">Adicionar</Button>
-                            </form>
+                            <FormProduto />
                         </AlertDialogBody>
                     </AlertDialogContent>
                 </AlertDialog>
