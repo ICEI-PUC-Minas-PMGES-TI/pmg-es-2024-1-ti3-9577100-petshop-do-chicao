@@ -4,13 +4,14 @@ import axios from 'axios';
 import { Heading } from '@chakra-ui/react';
 import DeleteButton from './DeleteButton';
 import {hoist} from "next/dist/build/templates/helpers";
+import {hasZeroOrOneAsteriskCharacter} from "next/dist/build/webpack/plugins/jsconfig-paths-plugin";
 
 export default function Dadosagendamentos({ agendamento }) {
     const [formData, setFormData] = useState({
         servico: '',
         cliente: '',
         agendamento: '',
-        horario: agendamento ? new Date(agendamento.start).toISOString().slice(0, 16) : '',
+        horario: agendamento? new Date(agendamento) : new Date(),
         duracao: '',
         observacoes: ''
     });
@@ -87,6 +88,23 @@ export default function Dadosagendamentos({ agendamento }) {
 
         fetchData();
     }, []);
+
+    const handleClienteChange = (e) => {
+        const clienteId = e.target.value;
+        async function fetchPetsByTutor() {
+            const response = await axios.get(`http://localhost:8081/pets/tutor/${clienteId}`);
+            const petsData = response.data.map((pet) => ({
+                value: pet.id,
+                label: pet.nome,
+            }));
+            setPet(petsData);
+        }
+        fetchPetsByTutor();
+        setFormData({
+            ...formData,
+            cliente: e.target.value,
+        });
+    };
 
     const clearForm = () => {
         setFormData({
@@ -176,7 +194,7 @@ export default function Dadosagendamentos({ agendamento }) {
                             placeholder='Cliente'
                             name='cliente'
                             value={formData.cliente}
-                            onChange={handleChange}
+                            onChange={handleClienteChange}
                         >
                             {tutores.map((option) => (
                                 <option key={option.value} value={option.label}>
@@ -207,7 +225,7 @@ export default function Dadosagendamentos({ agendamento }) {
                             name='horario'
                             type='datetime-local'
                             value={formData.horario}
-                            onChange={handleDadosagendamentosChange}
+                            onChange={(e) => setFormData({...formData, horario: e.target.value })}
                         />
                     </GridItem>
                     <GridItem  colSpan={2}>

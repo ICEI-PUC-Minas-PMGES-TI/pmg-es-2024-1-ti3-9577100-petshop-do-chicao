@@ -10,6 +10,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
+  // password: "1234",
   password: "1234",
   database: "petshop_do_chicao",
 });
@@ -51,19 +52,19 @@ app.post("/products", (req, res) => {
   const { produto_descricao, preco, qtde } = req.body;
 
   const sql =
-    "INSERT INTO products ( produto_descricao, preco, qtde) VALUES (?, ?, ?)";
+      "INSERT INTO products ( produto_descricao, preco, qtde) VALUES (?, ?, ?)";
   db.query(
-    sql,
-    [produto_descricao, preco, qtde],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar funcionário:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [produto_descricao, preco, qtde],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar funcionário:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res
+            .status(201)
+            .json({ message: "Funcionário cadastrado com sucesso!" });
       }
-      return res
-        .status(201)
-        .json({ message: "Funcionário cadastrado com sucesso!" });
-    }
   );
 });
 
@@ -83,7 +84,7 @@ app.put("/products/:id", (req, res) => {
   const { id } = req.params;
   const { produto_descricao, preco, qtde } = req.body;
   const sql =
-    "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ? WHERE id = ?";
+      "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ? WHERE id = ?";
   db.query(sql, [produto_descricao, preco, qtde, id], (err, result) => {
     if (err) {
       console.error("Erro ao atualizar produto:", err);
@@ -97,7 +98,7 @@ app.post("/clientes", (req, res) => {
   const { nome, endereco, telefone, email, cpf } = req.body;
 
   const sql =
-    "INSERT INTO clientes (nome, endereco, telefone, email, cpf) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO clientes (nome, endereco, telefone, email, cpf) VALUES (?, ?, ?, ?, ?)";
   db.query(sql, [nome, endereco, telefone, email, cpf], (err, result) => {
     if (err) {
       console.error("Erro ao cadastrar cliente:", err);
@@ -137,7 +138,7 @@ app.put("/clientes/:id", (req, res) => {
   const { id } = req.params;
   const { nome, endereco, telefone, email, cpf } = req.body;
   const sql =
-    "UPDATE clientes SET nome = ?, endereco = ?, telefone = ?, email = ?, cpf = ? WHERE id = ?";
+      "UPDATE clientes SET nome = ?, endereco = ?, telefone = ?, email = ?, cpf = ? WHERE id = ?";
   db.query(sql, [nome, endereco, telefone, email, cpf, id], (err, result) => {
     if (err) {
       console.error("Erro ao atualizar cliente:", err);
@@ -212,67 +213,67 @@ app.post("/vendas", (req, res) => {
 
   // Aguarda todas as promessas serem resolvidas
   Promise.all(promises)
-    .then(() => {
-      const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
-      db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento], (err, result) => {
-        if (err) {
-          console.error("Erro ao cadastrar venda:", err);
-          return res.status(500).json({ error: "Erro interno do servidor" });
-        }
+      .then(() => {
+        const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
+        db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento], (err, result) => {
+          if (err) {
+            console.error("Erro ao cadastrar venda:", err);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+          }
 
-        const vendaId = result.insertId;
+          const vendaId = result.insertId;
 
-        // Mapeia cada item em uma promessa de inserção na tabela de itensvenda
-        const itensVendaPromises = itens.map(item => {
-          const sqlItemVenda = "INSERT INTO itensvenda (idproduto, qtde, idvenda) VALUES (?, ?, ?)";
-          return new Promise((resolve, reject) => {
-            db.query(sqlItemVenda, [item.idproduto, item.qtde, vendaId], (err, result) => {
-              if (err) {
-                console.error("Erro ao cadastrar item de venda:", err);
-                reject(err);
-              }
-              resolve();
-            });
-          });
-        });
-
-        // Aguarda todas as promessas de inserção na tabela de itensvenda serem resolvidas
-        Promise.all(itensVendaPromises)
-          .then(() => {
-            // Atualiza o estoque de cada produto
-            const updateStockPromises = itens.map(item => {
-              const sqlUpdateStock = "UPDATE products SET qtde = qtde - ? WHERE id = ?";
-              return new Promise((resolve, reject) => {
-                db.query(sqlUpdateStock, [item.qtde, item.idproduto], (err, result) => {
-                  if (err) {
-                    console.error("Erro ao atualizar estoque:", err);
-                    reject(err);
-                  }
-                  resolve();
-                });
+          // Mapeia cada item em uma promessa de inserção na tabela de itensvenda
+          const itensVendaPromises = itens.map(item => {
+            const sqlItemVenda = "INSERT INTO itensvenda (idproduto, qtde, idvenda) VALUES (?, ?, ?)";
+            return new Promise((resolve, reject) => {
+              db.query(sqlItemVenda, [item.idproduto, item.qtde, vendaId], (err, result) => {
+                if (err) {
+                  console.error("Erro ao cadastrar item de venda:", err);
+                  reject(err);
+                }
+                resolve();
               });
             });
+          });
 
-            // Aguarda todas as promessas de atualização de estoque serem resolvidas
-            Promise.all(updateStockPromises)
+          // Aguarda todas as promessas de inserção na tabela de itensvenda serem resolvidas
+          Promise.all(itensVendaPromises)
               .then(() => {
-                res.status(201).json({ message: "Venda cadastrada com sucesso!" });
+                // Atualiza o estoque de cada produto
+                const updateStockPromises = itens.map(item => {
+                  const sqlUpdateStock = "UPDATE products SET qtde = qtde - ? WHERE id = ?";
+                  return new Promise((resolve, reject) => {
+                    db.query(sqlUpdateStock, [item.qtde, item.idproduto], (err, result) => {
+                      if (err) {
+                        console.error("Erro ao atualizar estoque:", err);
+                        reject(err);
+                      }
+                      resolve();
+                    });
+                  });
+                });
+
+                // Aguarda todas as promessas de atualização de estoque serem resolvidas
+                Promise.all(updateStockPromises)
+                    .then(() => {
+                      res.status(201).json({ message: "Venda cadastrada com sucesso!" });
+                    })
+                    .catch(err => {
+                      console.error("Erro ao atualizar estoque:", err);
+                      res.status(500).json({ error: "Erro interno do servidor" });
+                    });
               })
               .catch(err => {
-                console.error("Erro ao atualizar estoque:", err);
+                console.error("Erro ao processar venda:", err);
                 res.status(500).json({ error: "Erro interno do servidor" });
               });
-          })
-          .catch(err => {
-            console.error("Erro ao processar venda:", err);
-            res.status(500).json({ error: "Erro interno do servidor" });
-          });
+        });
+      })
+      .catch(err => {
+        console.error("Erro ao processar venda:", err);
+        res.status(500).json({ error: "Erro interno do servidor" });
       });
-    })
-    .catch(err => {
-      console.error("Erro ao processar venda:", err);
-      res.status(500).json({ error: "Erro interno do servidor" });
-    });
 });
 
 
@@ -388,17 +389,17 @@ app.get("/itensvenda/:idvenda", (req, res) => {
 app.post("/pets", (req, res) => {
   const { nome, raca, temperamento, idade, observacoes, tutor } = req.body;
   const sql =
-    "INSERT INTO petshop_do_chicao.pets (nome, raca, temperamento, idade,  observacoes, tutor) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO petshop_do_chicao.pets (nome, raca, temperamento, idade,  observacoes, tutor) VALUES (?, ?, ?, ?, ?, ?)";
   db.query(
-    sql,
-    [nome, raca, temperamento, idade, observacoes, tutor],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar pet:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [nome, raca, temperamento, idade, observacoes, tutor],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar pet:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res.status(201).json({ message: "Pet cadastrado com sucesso!" });
       }
-      return res.status(201).json({ message: "Pet cadastrado com sucesso!" });
-    }
   );
 });
 
@@ -427,6 +428,22 @@ app.get('/pets/:id', (req, res) => {
     return res.status(200).json(result[0]);
   });
 });
+
+app.get('/pets/tutor/:tutor', (req, res) => {
+  const { tutor } = req.params;
+  const sql = 'SELECT * FROM petshop_do_chicao.pets WHERE tutor =?';
+  db.query(sql, [tutor], (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar pets pelo tutor:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'Nenhum pet encontrado com esse tutor' });
+    }
+    return res.status(200).json(result);
+  });
+});
+
 
 app.put('/pets/:id', (req, res) => {
   const { id } = req.params;
@@ -457,19 +474,19 @@ app.post("/funcionarios", (req, res) => {
   const { nome, email, telefone, cpf, senha, endereco } = req.body;
 
   const sql =
-    "INSERT INTO funcionarios (nome, email, telefone, cpf, senha, endereco) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO funcionarios (nome, email, telefone, cpf, senha, endereco) VALUES (?, ?, ?, ?, ?, ?)";
   db.query(
-    sql,
-    [nome, email, telefone, cpf, senha, endereco],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar funcionário:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [nome, email, telefone, cpf, senha, endereco],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar funcionário:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res
+            .status(201)
+            .json({ message: "Funcionário cadastrado com sucesso!" });
       }
-      return res
-        .status(201)
-        .json({ message: "Funcionário cadastrado com sucesso!" });
-    }
   );
 });
 
@@ -477,7 +494,7 @@ app.put("/funcionarios/:id", (req, res) => {
   const { id } = req.params;
   const { nome, email, telefone, cpf, senha, endereco } = req.body;
   const sql =
-    "UPDATE funcionarios SET nome = ?, email = ?, telefone = ?, cpf = ?, senha = ?, endereco = ? WHERE id = ?";
+      "UPDATE funcionarios SET nome = ?, email = ?, telefone = ?, cpf = ?, senha = ?, endereco = ? WHERE id = ?";
   db.query(sql, [nome, email, telefone, cpf, senha, endereco, id], (err, result) => {
     if (err) {
       console.error("Erro ao atualizar funcionário:", err);
@@ -528,19 +545,19 @@ app.post("/agendamento", (req, res) => {
   const { servico, cliente, pet, horario, duracao, observacoes } = req.body;
 
   const sql =
-    "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, duracao, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO petshop_do_chicao.agendamento (servico, cliente, pet, horario, duracao, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
   db.query(
-    sql,
-    [servico, cliente, pet, horario, duracao, observacoes],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar agendamento:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [servico, cliente, pet, horario, duracao, observacoes],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar agendamento:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res
+            .status(201)
+            .json({ message: "Agendamento cadastrado com sucesso!" });
       }
-      return res
-        .status(201)
-        .json({ message: "Agendamento cadastrado com sucesso!" });
-    }
   );
 });
 
@@ -567,6 +584,20 @@ app.delete('/agendamento/:id', (req, res) => {
   });
 });
 
+app.put("/agendamento/:id", (req, res) => {
+  const { id } = req.params;
+  const { servico, cliente, pet, horario, duracao, observacoes } = req.body;
+  const sql =
+      "UPDATE petshop_do_chicao.agendamento SET servico = ?, cliente = ?, pet = ?, horario = ?, duracao = ?, observacoes = ? WHERE id = ?";
+  db.query(sql, [servico, cliente, pet, horario, duracao, observacoes , id], (err, result) => {
+    if (err) {
+      console.error("Erro ao atualizar agendamento:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Agendamento atualizado com sucesso!" });
+  });
+});
+
 app.get("/servicos", (req, res) => {
   const sql = "SELECT * FROM petshop_do_chicao.servicos";
   db.query(sql, (err, results) => {
@@ -582,19 +613,19 @@ app.post("/servicos", (req, res) => {
   const { tipo, duracao, valor } = req.body;
 
   const sql =
-    "INSERT INTO petshop_do_chicao.servicos (tipo, duracao, valor) VALUES ( ?, ?, ?)";
+      "INSERT INTO petshop_do_chicao.servicos (tipo, duracao, valor) VALUES ( ?, ?, ?)";
   db.query(
-    sql,
-    [tipo, duracao, valor],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar servico:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [tipo, duracao, valor],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar servico:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res
+            .status(201)
+            .json({ message: "Servico cadastrado com sucesso!" });
       }
-      return res
-        .status(201)
-        .json({ message: "Servico cadastrado com sucesso!" });
-    }
   );
 });
 
@@ -613,19 +644,19 @@ app.post("/caixa/abrir", (req, res) => {
   const { dataabertura } = req.body;
 
   const sql =
-    "INSERT INTO caixa (isopen, valortotal, dataabertura, datafechamento) VALUES (true, 0, ?, null);";
+      "INSERT INTO caixa (isopen, valortotal, dataabertura, datafechamento) VALUES (true, 0, ?, null);";
   db.query(
-    sql,
-    [dataabertura],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar caixa:", err);
-        return res.status(500).json({ error: "Erro interno do servidor" });
+      sql,
+      [dataabertura],
+      (err, result) => {
+        if (err) {
+          console.error("Erro ao cadastrar caixa:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res
+            .status(201)
+            .json({ message: "Caixa cadastrado com sucesso!" });
       }
-      return res
-        .status(201)
-        .json({ message: "Caixa cadastrado com sucesso!" });
-    }
   );
 });
 

@@ -5,19 +5,23 @@ import {
     AlertDialogContent,
     AlertDialogOverlay,
     Box,
+    Button,
     ChakraProvider,
     Container,
-    Input, useDisclosure
+    Input,
+    useDisclosure
 } from '@chakra-ui/react';
-import {RangeDatepicker, SingleDatepicker} from "chakra-dayzed-datepicker";
+import { RangeDatepicker, SingleDatepicker } from "chakra-dayzed-datepicker";
 import React, { useState, useEffect } from 'react';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FormsAgendamento from "@/componentes/FormsAgendamento";
+import FormsEditaAgendamento from "@/componentes/FormsEditaAgendamento";
+import FormsServico from "@/componentes/FormsServico";
 import '../app/agendamento/agendamento.css';
-import {TimeIcon} from "@chakra-ui/icons";
+import { TimeIcon } from "@chakra-ui/icons";
 
 export default function Agendamentos() {
     const [calendarApi, setCalendarApi] = useState(null);
@@ -27,6 +31,8 @@ export default function Agendamentos() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [Agendamento, setAgendamento] = useState([]);
     const cancelRef = React.useRef();
+    const [isOpenNovoAgendamento, setIsOpenNovoAgendamento] = useState(false);
+    const [isOpenEditAgendamento, setIsOpenEditAgendamento] = useState(false);
 
     useEffect(() => {
         fetch('http://localhost:8081/agendamento')
@@ -35,9 +41,10 @@ export default function Agendamentos() {
                 const eventsData = data.map(item => {
                     const { id, servico, cliente, pet, horario, duracao, observacoes } = item;
                     const start = new Date(horario);
+                    console.log(duracao + " -> " + servico);
                     if (duracao) {
                         const [horas, minutos, segundos] = duracao.split(':').map(Number);
-                        const duracaoEmHoras = horas + minutos + segundos / 60;
+                        const duracaoEmHoras = horas + (minutos / 60) + (segundos / 3600);
                         const end = new Date(start.getTime() + duracaoEmHoras * 60 * 60 * 1000).toISOString();
                         return { id, title: `${servico} - ${cliente} - ${pet}`, start, end, extendedProps: { observacoes, duracao } };
                     } else {
@@ -60,7 +67,7 @@ export default function Agendamentos() {
             initialView: INITIAL_VIEW,
             events: events,
             eventClick: (info) => {
-                console.log('Event clicked:', info.event.title);
+                handleEventClick(info.event);
             },
             dateClick: (info) => {
                 handleDateClick(info);
@@ -75,8 +82,13 @@ export default function Agendamentos() {
         setCalendarApi(fullCalendar);
     }, [events]);
 
-    const handleAgendamentoClick = (Agendamento) => {
-        setAgendamentoSelecionado(Agendamento);
+    const handleEventClick = (event) => {
+        setAgendamentoSelecionado(event);
+        setIsOpenEditAgendamento(true);
+    };
+
+    const handleAgendamentoClick = (newEvent) => {
+        setAgendamentoSelecionado(newEvent);
         setIsOpenDadosAgendamento(true);
     };
 
@@ -97,7 +109,7 @@ export default function Agendamentos() {
             newEvent.end = end;
         }
 
-        handleAgendamentoClick(newEvent);
+        handleAgendamentoClick(start);
     };
 
     const updateEvent = (updatedEvent) => {
@@ -105,13 +117,55 @@ export default function Agendamentos() {
         calendarApi.addEvent(updatedEvent);
     };
 
+    const handleNovoAgendamentoClick = () => {
+        setIsOpenNovoAgendamento(true);
+    };
+
+    const handleCloseNovoAgendamento = () => {
+        setIsOpenNovoAgendamento(false);
+    };
+
+    const [isOpenNovoServico, setIsOpenNovoServico] = useState(false);
+
+    const handleNovoServicoClick = () => {
+        setIsOpenNovoServico(true);
+    };
+
+    const handleCloseNovoServico = () => {
+        setIsOpenNovoServico(false);
+    };
+
     return (
         <ChakraProvider>
+            <Button
+                mx='auto'
+                colorScheme='red'
+                size='md'
+                borderRadius='lg'
+                position={'absolute'}
+                top={'10%'}
+                left={'45%'}
+                onClick={handleNovoServicoClick}
+            >
+                Novo Serviço
+            </Button>
+            <Button
+                mx='auto'
+                colorScheme='red'
+                size='md'
+                borderRadius='lg'
+                position={'absolute'}
+                top={'10%'}
+                left={'55%'}
+                onClick={handleNovoAgendamentoClick}
+            >
+                Novo Agendamento
+            </Button>
             <Container
                 height={'90vh'}
                 width={'100vw'}
                 position={'absolute'}
-                top={0}
+                top={'60%'}
                 left={'20%'}
                 padding={0}
                 margin={0}
@@ -135,8 +189,57 @@ export default function Agendamentos() {
                     </AlertDialogBody>
                 </AlertDialogContent>
             </AlertDialog>
+            {isOpenNovoAgendamento && (
+                <AlertDialog
+                    motionPreset='slideInBottom'
+                    leastDestructiveRef={cancelRef}
+                    onClose={handleCloseNovoAgendamento}
+                    isOpen={isOpenNovoAgendamento}
+                    isCentered
+                >
+                    <AlertDialogOverlay />
+                    <AlertDialogContent>
+                        <AlertDialogCloseButton />
+                        <AlertDialogBody>
+                            <FormsAgendamento />
+                        </AlertDialogBody>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+            {isOpenNovoServico && (
+                <AlertDialog
+                    motionPreset='slideInBottom'
+                    leastDestructiveRef={cancelRef}
+                    onClose={handleCloseNovoServico}
+                    isOpen={isOpenNovoServico}
+                    isCentered
+                >
+                    <AlertDialogOverlay />
+                    <AlertDialogContent>
+                        <AlertDialogCloseButton />
+                        <AlertDialogBody>
+                            <FormsServico />
+                        </AlertDialogBody>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+            {isOpenEditAgendamento && (
+                <AlertDialog
+                    motionPreset='slideInBottom'
+                    leastDestructiveRef={cancelRef}
+                    onClose={() => setIsOpenEditAgendamento(false)}
+                    isOpen={isOpenEditAgendamento}
+                    isCentered
+                >
+                    <AlertDialogOverlay />
+                    <AlertDialogContent>
+                        <AlertDialogCloseButton />
+                        <AlertDialogBody>
+                            {AgendamentoSelecionado && AgendamentoSelecionado.title && <FormsEditaAgendamento agendamento={AgendamentoSelecionado} />}
+                        </AlertDialogBody>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </ChakraProvider>
-
-
     );
 }
