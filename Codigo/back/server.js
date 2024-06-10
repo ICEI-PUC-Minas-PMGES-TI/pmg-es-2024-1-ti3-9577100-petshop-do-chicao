@@ -598,6 +598,78 @@ app.post("/servicos", (req, res) => {
   );
 });
 
+app.get("/caixa", (req, res) => {
+  const sql = "SELECT * FROM caixa";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar caixas:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
+});
+
+app.post("/caixa/abrir", (req, res) => {
+  const { dataabertura } = req.body;
+
+  const sql =
+    "INSERT INTO caixa (isopen, valortotal, dataabertura, datafechamento) VALUES (true, 0, ?, null);";
+  db.query(
+    sql,
+    [dataabertura],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao cadastrar caixa:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Caixa cadastrado com sucesso!" });
+    }
+  );
+});
+
+app.delete("/caixa/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM caixa WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("Erro ao excluir funcionário:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json({ message: "Cliente excluído com sucesso!" });
+  });
+});
+
+// app.get("/caixa/:id", (req, res) => {
+//   const { id } = req.params;
+//   const sql = "SELECT * FROM caixa WHERE id = ?";
+//   db.query(sql, [id], (err, result) => {
+//     if (err) {
+//       console.error("Erro ao buscar caixa:", err);
+//       return res.status(500).json({ error: "Erro interno do servidor" });
+//     }
+//     if (result.length === 0) {
+//       return res.status(404).json({ message: "Funcionário não encontrado" });
+//     }
+//     return res.status(200).json(result[0]);
+//   });
+// });
+
+app.get("/caixa/:idcaixa", (req, res) => {
+  const { idcaixa } = req.params;
+  const sql = `
+    SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = 1;
+  `;
+  db.query(sql, [idcaixa], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar vendas do caixa:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
+});
+
 app.listen(8081, () => {
   console.log(`Server is running on port 8081.`);
 });
