@@ -10,15 +10,16 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function ListaVendas({ caixa }) {
-  const [vendas, setVendas] = useState([]);
+export default function ListaMovimentacoes({ caixa }) {
+  const [movimentacoes, setMovimentacoes] = useState([]);
 
   useEffect(() => {
     return () => {
       axios
         .get(`http://localhost:8081/caixa/${caixa.id}`)
         .then((response) => {
-          setVendas(response.data);
+          const movs = response.data.map((mov) => ({ ...mov, tipo: "Venda" }));
+          setMovimentacoes(...movimentacoes, movs);
         })
         .catch((error) => {
           console.error("Erro ao abrir caixa:", error);
@@ -31,20 +32,20 @@ export default function ListaVendas({ caixa }) {
       <Table variant="striped">
         <Thead>
           <Tr>
-            <Th>Id</Th>
+            <Th>Tipo</Th>
             <Th>Data</Th>
             <Th>Forma Pagamento</Th>
             <Th isNumeric>Valor Total</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {vendas.length > 0 ? (
-            vendas.map((venda) => (
-              <Tr key={venda.id}>
-                <Td>{venda.id}</Td>
-                <Td>{new Date(venda.data).toLocaleString()}</Td>
-                <Td>{venda.tipopagamento}</Td>
-                <Td isNumeric>R$ {venda.valortotal}</Td>
+          {movimentacoes.length > 0 ? (
+            movimentacoes.map((movimentacao) => (
+              <Tr key={movimentacao.id}>
+                <Td>{movimentacao.tipo}</Td>
+                <Td>{new Date(movimentacao.data).toLocaleString()}</Td>
+                <Td>{movimentacao.tipopagamento}</Td>
+                <Td isNumeric>R$ {movimentacao.valortotal}</Td>
               </Tr>
             ))
           ) : (

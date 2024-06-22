@@ -26,9 +26,10 @@ import {
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
 import { theme } from "@/app/theme";
-import ListaVendas from "./ListaVendas";
+import ListaMovimentacoes from "./ListaMovimentacoes";
 
 export default function Caixa() {
+  const [caixaAberto, setCaixaAberto] = useState(null);
   const [caixas, setCaixas] = useState([]);
   const [caixaSelecionado, setCaixaSelecionado] = useState(null);
   const cancelRef = useRef();
@@ -38,6 +39,11 @@ export default function Caixa() {
     onClose: onCreateClose,
   } = useDisclosure();
   const {
+    isOpen: isCloseCashierOpen,
+    onOpen: onCloseCashierOpen,
+    onClose: onCloseCashierClose,
+  } = useDisclosure();
+  const {
     isOpen: isCaixaOpen,
     onOpen: onCaixaOpen,
     onClose: onCaixaClose,
@@ -45,6 +51,16 @@ export default function Caixa() {
 
   useEffect(() => {
     return () => {
+      axios
+        .get("http://localhost:8081/caixa/aberto")
+        .then(function (response) {
+          response.data.length > 0
+            ? setCaixaAberto(true)
+            : setCaixaAberto(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       axios
         .get("http://localhost:8081/caixa")
         .then(function (response) {
@@ -56,24 +72,45 @@ export default function Caixa() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
-    const dados = {
-      dataabertura: new Date().toISOString().slice(0, 19).replace("T", " "),
-    };
-
+  function handleOpenCashier() {
     axios
-      .post("http://localhost:8081/caixa/abrir", dados)
+      .post("http://localhost:8081/caixa/abrir")
       .then((response) => {
         console.log("Resposta do backend:", response.data);
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Erro ao abrir caixa:", error);
       });
-  };
+  }
+
+  function handleCloseCashier() {
+    axios
+      .put("http://localhost:8081/caixa/fechar")
+      .then((response) => {
+        console.log("Resposta do backend:", response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Erro ao abrir caixa:", error);
+      });
+  }
 
   function handleCaixaClick(caixa) {
     setCaixaSelecionado(caixa);
     onCaixaOpen();
+  }
+
+  function ButtonCondition({ isOpen }) {
+    if (isOpen == null) return;
+    if (isOpen) {
+      return (
+        <Button onClick={onCloseCashierOpen} variant="outline">
+          Fechar Caixa
+        </Button>
+      );
+    }
+    return <Button onClick={onCreateOpen}>Abrir Caixa</Button>;
   }
 
   return (
@@ -86,7 +123,7 @@ export default function Caixa() {
           </InputRightElement>
         </InputGroup>
         <Spacer />
-        <Button onClick={onCreateOpen}>Abrir Caixa</Button>
+        <ButtonCondition isOpen={caixaAberto} />
       </Flex>
 
       <TableContainer
@@ -108,7 +145,11 @@ export default function Caixa() {
             {caixas.map((caixa) => (
               <Tr key={caixa.id} onClick={() => handleCaixaClick(caixa)}>
                 <Td>{new Date(caixa.dataabertura).toLocaleString()}</Td>
-                <Td>{caixa.datafechamento == null ? "" : new Date(caixa.datafechamento).toLocaleString()}</Td>
+                <Td>
+                  {caixa.datafechamento == null
+                    ? ""
+                    : new Date(caixa.datafechamento).toLocaleString()}
+                </Td>
                 <Td>{caixa.isopen == 0 ? "Fechado" : "Aberto"}</Td>
                 <Td isNumeric>R$ {caixa.valortotal}</Td>
               </Tr>
@@ -137,8 +178,34 @@ export default function Caixa() {
               >
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit} ml={3}>
+              <Button onClick={handleOpenCashier} ml={3}>
                 Abrir
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <AlertDialog
+        isOpen={isCloseCashierOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onCloseCashierClose}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Fechar Caixa</AlertDialogHeader>
+            <AlertDialogBody>Deseja fechar o caixa aberto?</AlertDialogBody>
+            <AlertDialogFooter>
+              <Button
+                colorScheme="gray"
+                ref={cancelRef}
+                onClick={onCloseCashierClose}
+              >
+                Cancelar
+              </Button>
+              <Button onClick={handleCloseCashier} ml={3}>
+                Fechar
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -151,7 +218,7 @@ export default function Caixa() {
             <AlertDialogHeader>Caixa</AlertDialogHeader>
             <AlertDialogCloseButton />
             <AlertDialogBody>
-              <ListaVendas caixa={caixaSelecionado} />
+              <ListaMovimentacoes caixa={caixaSelecionado} />
             </AlertDialogBody>
             <AlertDialogFooter />
           </AlertDialogContent>

@@ -641,13 +641,9 @@ app.get("/caixa", (req, res) => {
 });
 
 app.post("/caixa/abrir", (req, res) => {
-  const { dataabertura } = req.body;
-
-  const sql =
-      "INSERT INTO caixa (isopen, valortotal, dataabertura, datafechamento) VALUES (true, 0, ?, null);";
+  const sql = "INSERT INTO caixa (isopen, valortotal, dataabertura, datafechamento) VALUES (true, 0, NOW(), null);";
   db.query(
       sql,
-      [dataabertura],
       (err, result) => {
         if (err) {
           console.error("Erro ao cadastrar caixa:", err);
@@ -669,6 +665,18 @@ app.delete("/caixa/:id", (req, res) => {
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
     return res.status(200).json({ message: "Cliente excluído com sucesso!" });
+  });
+});
+
+app.get("/caixa/aberto", (req, res) => {
+  const sql = "SELECT * FROM caixa WHERE isopen IS true";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar caixa aberto:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    console.log("result", results);
+    return res.status(200).json(results);
   });
 });
 
@@ -698,6 +706,26 @@ app.get("/caixa/:idcaixa", (req, res) => {
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
     return res.status(200).json(results);
+  });
+});
+
+app.put("/caixa/fechar", (req, res) => {
+  const sqlEncontrarCaixaAberto = "SELECT * FROM caixa WHERE isopen IS true";
+
+  db.query(sqlEncontrarCaixaAberto, (err, result) => {
+    if (err) {
+      console.error("Erro ao procurar caixa aberto:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    const caixaAbertoId = result[0].id;
+    const sqlFecharCaixa = `UPDATE caixa SET isopen = false, datafechamento = NOW() WHERE id = ${caixaAbertoId};`
+    db.query(sqlFecharCaixa, (err, result) => {
+      if (err) {
+        console.error("Erro ao fechar caixa:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res.status(200).json({ message: "Caixa fechado com sucesso!" });
+    });
   });
 });
 
