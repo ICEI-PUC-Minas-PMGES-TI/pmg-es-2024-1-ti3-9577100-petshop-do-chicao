@@ -28,7 +28,9 @@ export default function Vendas() {
   const [vendas, setVendas] = useState([]);
   const [vendaSelecionada, setVendaSelecionada] = useState(null);
   const [isOpenDadosVenda, setIsOpenDadosVenda] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    onClose: () => handleCancelVenda(), // Chama a função handleCancelVenda ao fechar
+  });
   const cancelRef = useRef();
   const [idCliente, setIdCliente] = useState("");
   const [tipoPagamento, setTipoPagamento] = useState("");
@@ -90,10 +92,17 @@ export default function Vendas() {
         setIdCliente("");
         setTipoPagamento("");
         setItensVenda([]);
+        onClose(); // Fecha o AlertDialog após a venda ser efetuada
       })
       .catch((error) => {
         console.error("Erro ao enviar formulário:", error);
       });
+  };
+
+  const handleCancelVenda = () => {
+    setIdCliente("");
+    setTipoPagamento("");
+    setItensVenda([]);
   };
 
   return (
