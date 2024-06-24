@@ -15,11 +15,18 @@ export default function ListaMovimentacoes({ caixa }) {
 
   useEffect(() => {
     return () => {
+      const movs = [];
       axios
         .get(`http://localhost:8081/caixa/vendas/${caixa.id}`)
         .then((response) => {
-          const movs = response.data.map((mov) => ({ ...mov, tipo: "Venda" }));
-          setMovimentacoes(...movimentacoes, movs);
+          response.data.map((mov) =>
+            movs.push({
+              tipo: "Venda",
+              valortotal: mov.valortotal,
+              descricao: mov.tipopagamento,
+              data: mov.data,
+            })
+          );
         })
         .catch((error) => {
           console.error("Erro ao abrir caixa:", error);
@@ -27,15 +34,15 @@ export default function ListaMovimentacoes({ caixa }) {
       axios
         .get(`http://localhost:8081/caixa/produtos/${caixa.id}`)
         .then((response) => {
-          console.log("response", response.data);
-          const movs = response.data.map((mov) => ({
-            tipo: "Estoque",
-            valortotal: mov.preco * mov.qtde,
-            descricao: mov.produto_descricao,
-            data: mov.data,
-          }));
-          console.log(movs);
-          setMovimentacoes(...movimentacoes, movs);
+          response.data.map((mov) =>
+            movs.push({
+              tipo: "Estoque",
+              valortotal: mov.preco * mov.qtde,
+              descricao: mov.produto_descricao,
+              data: mov.data,
+            })
+          );
+          setMovimentacoes(movs);
         })
         .catch((error) => {
           console.error("Erro ao abrir caixa:", error);
@@ -57,8 +64,8 @@ export default function ListaMovimentacoes({ caixa }) {
         </Thead>
         <Tbody>
           {movimentacoes.length > 0 ? (
-            movimentacoes.map((movimentacao) => (
-              <Tr key={movimentacao.id}>
+            movimentacoes.map((movimentacao, index) => (
+              <Tr key={index}>
                 <Td>{movimentacao.descricao}</Td>
                 <Td>{movimentacao.tipo}</Td>
                 <Td>{new Date(movimentacao.data).toLocaleString()}</Td>
