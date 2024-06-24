@@ -188,7 +188,7 @@ app.get("/vendas/:id", (req, res) => {
 });
 
 app.post("/vendas", (req, res) => {
-  const { data, idcliente, tipopagamento, idcaixa, itens } = req.body;
+  const {idcliente, tipopagamento, idcaixa, itens } = req.body;
 
   let valortotal = 0;
 
@@ -215,8 +215,8 @@ app.post("/vendas", (req, res) => {
   // Aguarda todas as promessas serem resolvidas
   Promise.all(promises)
       .then(() => {
-        const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento, idcaixa) VALUES (?, ?, ?, ?, ?)";
-        db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento, idcaixa], (err, result) => {
+        const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento, idcaixa) VALUES (NOW(), ?, ?, ?, ?)";
+        db.query(sqlVenda, [idcliente, valortotal, tipopagamento, idcaixa], (err, result) => {
           if (err) {
             console.error("Erro ao cadastrar venda:", err);
             return res.status(500).json({ error: "Erro interno do servidor" });

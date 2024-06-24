@@ -19,16 +19,14 @@ export default function FormProduto() {
   };
 
   useEffect(() => {
-    return () => {
-      axios
-        .get("http://localhost:8081/caixa/aberto")
-        .then(function (response) {
-          setCaixaAberto(response.data[0]);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
+    axios
+      .get("http://localhost:8081/caixa/aberto")
+      .then(function (response) {
+        setCaixaAberto(response.data[0]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
   const [formData, setFormData] = useState(initialState);
@@ -43,6 +41,11 @@ export default function FormProduto() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!caixaAberto) {
+      console.error("Caixa aberto não encontrado.");
+      return;
+    }
 
     const dadosProduto = {
       produto_descricao: formData.produto_descricao,

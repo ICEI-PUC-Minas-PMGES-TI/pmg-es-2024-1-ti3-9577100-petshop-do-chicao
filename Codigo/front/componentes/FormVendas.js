@@ -81,8 +81,15 @@ export default function FormVendas(props) {
     props.setTipoPagamento(e.target.value);
   };
 
+  const truncateDescription = (description, maxLength) => {
+    if (description.length > maxLength) {
+        return `${description.slice(0, maxLength)}...`;
+    }
+    return description;
+};
+
   return (
-    <FormControl id="formVenda">
+    <FormControl  id="formVenda">
       <Grid
         templateAreas={`"headerProdutos"
                         "produtos"
@@ -93,7 +100,7 @@ export default function FormVendas(props) {
         gap={"2"}
       >
         <GridItem area={"headerProdutos"}>
-          <Text fontSize="sm" fontWeight="bold">
+          <Text fontSize="md" fontWeight="bold">
             Seleção de Produtos
           </Text>
         </GridItem>
@@ -126,14 +133,14 @@ export default function FormVendas(props) {
               </Button>
             </DarkMode>
           </SimpleGrid>
-        </GridItem>
+        </GridItem> 
         <GridItem area={"total"}>
           <Text fontSize="lg" fontWeight="bold">
             Total: R$ {total.toFixed(2)}
           </Text>
         </GridItem>
         <GridItem area={"tabela"}>
-          <TableContainer>
+          <TableContainer marginTop={5} marginBottom={5}>
             <Table size="sm">
               <Thead>
                 <Tr>
@@ -148,7 +155,7 @@ export default function FormVendas(props) {
                   const produto = produtos.find(p => p.id === item.idproduto);
                   return (
                     <Tr key={index}>
-                      <Td>{produto ? produto.produto_descricao : 'Produto não encontrado'}</Td>
+                      <Td>{produto ? truncateDescription(produto.produto_descricao, 10) : 'Produto não encontrado'}</Td>
                       <Td>{item.qtde}</Td>
                       <Td>{produto ? produto.preco.toFixed(2) : '0.00'}</Td>
                       <Td>{(item.qtde * (produto ? produto.preco : 0)).toFixed(2)}</Td>
@@ -160,7 +167,7 @@ export default function FormVendas(props) {
           </TableContainer>
         </GridItem>
         <GridItem area={"dados"}>
-          <SimpleGrid columns="2" spacingX={"4"} spacingY={"2"}>
+          <SimpleGrid marginTop={5} marginBottom={5} columns="2" spacingX={"4"} spacingY={"2"}>
             <Select placeholder="Cliente" onChange={handleClienteChange}>
               {clientes.map((cliente) => (
                 <option key={cliente.id} value={cliente.id}>
@@ -176,7 +183,7 @@ export default function FormVendas(props) {
             </Select>
           </SimpleGrid>
         </GridItem>
-        <GridItem area={"button"} paddingTop="2">
+        <GridItem marginBottom={5} area={"button"} paddingTop="2">
           {props.button}
         </GridItem>
       </Grid>

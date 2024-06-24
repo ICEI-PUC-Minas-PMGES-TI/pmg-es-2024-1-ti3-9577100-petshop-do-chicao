@@ -97,11 +97,8 @@ export default function Vendas() {
   };
 
   const handleSubmitVenda = async () => {
-    const dataHora = new Date();
-    const dataHoraFormatada = dataHora.toISOString().slice(0, 19).replace('T', ' '); // Formato 'YYYY-MM-DD HH:MM:SS'
 
     const dadosVenda = {
-      data: dataHoraFormatada,
       idcliente: parseInt(idCliente),
       tipopagamento: tipoPagamento,
       itens: itensVenda,
@@ -191,7 +188,7 @@ export default function Vendas() {
       >
         <AlertDialogOverlay />
         <AlertDialogContent>
-          <AlertDialogHeader>Efetuar Venda</AlertDialogHeader>
+          <AlertDialogHeader></AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
             <FormVendas
@@ -201,7 +198,7 @@ export default function Vendas() {
               setItensVenda={setItensVenda}
               button={
                 <Button width="100%" onClick={handleSubmitVenda}>
-                  Efetuar Venda
+                  Confirmar venda
                 </Button>
               }
             />

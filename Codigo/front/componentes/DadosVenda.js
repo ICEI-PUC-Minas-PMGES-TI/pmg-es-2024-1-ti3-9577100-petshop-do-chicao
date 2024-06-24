@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
+import { Text, Container, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react'
 
 export default function DadosVenda({ venda }) {
     const [itens, setItens] = useState([]);
@@ -19,7 +20,7 @@ export default function DadosVenda({ venda }) {
                 try {
                     const response = await axios.get(`http://localhost:8081/itensvenda/${venda.id}`);
                     console.log('API response data:', response.data);
-        
+
                     const itensFormatados = response.data.map(item => ({
                         id: item.item_id,
                         descricao: item.produto_descricao,
@@ -51,21 +52,29 @@ export default function DadosVenda({ venda }) {
         }
     }, [venda]);
 
+    const truncateDescription = (description, maxLength) => {
+        if (description.length > maxLength) {
+            return `${description.slice(0, maxLength)}...`;
+        }
+        return description;
+    };
+
     return (
         <Container>
-            <Breadcrumb>
-                <BreadcrumbItem>
-                    <h1>{formData.data}</h1>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <h1>{formData.hora}</h1>
-                </BreadcrumbItem>
-                <BreadcrumbItem isCurrentPage>
-                    <h1>R$ {formData.valorTotal}</h1>
-                </BreadcrumbItem>
-            </Breadcrumb>
 
-            <TableContainer border='1px' borderColor='gray.200' borderRadius='lg' padding='10px'>
+            <Grid margin={3} templateColumns='repeat(3, 1fr)' gap={6}>
+                <GridItem>
+                    <Text fontSize="md" fontWeight="bold">{formData.data}</Text>
+                </GridItem>
+                <GridItem>
+                    <Text fontSize="md" fontWeight="bold">{formData.hora}</Text>
+                </GridItem>
+                <GridItem>
+                    <Text fontSize="md" fontWeight="bold">Total: R${formData.valorTotal}</Text>
+                </GridItem>
+            </Grid>
+
+            <TableContainer marginTop={5} marginBottom={5} border='1px' borderColor='gray.200' borderRadius='lg'>
                 <Table size='sm'>
                     <Thead>
                         <Tr>
@@ -80,7 +89,7 @@ export default function DadosVenda({ venda }) {
                             itens.map(item => (
                                 <Tr key={item.id}>
                                     <Td>{item.id}</Td>
-                                    <Td>{item.descricao}</Td>
+                                    <Td>{truncateDescription(item.descricao, 8)}</Td>
                                     <Td isNumeric>R$ {item.valorUnitario}</Td>
                                     <Td isNumeric>{item.quantidade}</Td>
                                 </Tr>
