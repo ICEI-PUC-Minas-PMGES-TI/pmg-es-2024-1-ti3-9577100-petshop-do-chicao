@@ -29,7 +29,7 @@ export default function Vendas() {
   const [vendaSelecionada, setVendaSelecionada] = useState(null);
   const [isOpenDadosVenda, setIsOpenDadosVenda] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure({
-    onClose: () => handleCancelVenda(), 
+    onClose: () => handleCancelVenda(),
   });
   const cancelRef = useRef();
   const [idCliente, setIdCliente] = useState("");
@@ -70,7 +70,6 @@ export default function Vendas() {
       try {
         const response = await axios.get("http://localhost:8081/caixa/aberto");
         if (response.data.length > 0) {
-          
           const idCaixa = response.data[0].id;
           setIdCaixaAberto(idCaixa);
         } else {
@@ -98,14 +97,17 @@ export default function Vendas() {
 
   const handleSubmitVenda = async () => {
     const dataHora = new Date();
-    const dataHoraFormatada = dataHora.toISOString().slice(0, 19).replace('T', ' '); // Formato 'YYYY-MM-DD HH:MM:SS'
+    const dataHoraFormatada = dataHora
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " "); // Formato 'YYYY-MM-DD HH:MM:SS'
 
     const dadosVenda = {
       data: dataHoraFormatada,
       idcliente: parseInt(idCliente),
       tipopagamento: tipoPagamento,
       itens: itensVenda,
-      idcaixa: idCaixaAberto
+      idcaixa: idCaixaAberto,
     };
 
     axios
@@ -115,7 +117,23 @@ export default function Vendas() {
         setIdCliente("");
         setTipoPagamento("");
         setItensVenda([]);
-        onClose(); 
+        const valor = itensVenda.reduce(
+          (acc, cur) => acc + cur["preco"] * cur["qtde"],
+          0
+        );
+        console.log(valor);
+        axios
+          .put("http://localhost:8081/caixa/alterarvalortotal", {
+            valor: valor,
+          })
+          .then(() => {
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar formulário:", error);
+          });
+        window.location.reload();
+        onClose();
       })
       .catch((error) => {
         console.error("Erro ao enviar formulário:", error);

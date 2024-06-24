@@ -37,7 +37,7 @@ export default function ListaMovimentacoes({ caixa }) {
           response.data.map((mov) =>
             movs.push({
               tipo: "Estoque",
-              valortotal: mov.preco * mov.qtde,
+              valortotal: mov.valorcompra * mov.qtde,
               descricao: mov.produto_descricao,
               data: mov.data,
             })
