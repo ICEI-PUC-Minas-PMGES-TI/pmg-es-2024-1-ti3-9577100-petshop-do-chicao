@@ -46,7 +46,7 @@ export default function ListaMovimentacoes({ caixa }) {
                 <Td>{movimentacao.tipo}</Td>
                 <Td>{new Date(movimentacao.data).toLocaleString()}</Td>
                 {/* <Td>{movimentacao.tipopagamento}</Td> */}
-                <Td isNumeric>
+                <Td color={movimentacao.tipo == "Estoque" ? "red" : "green"} fontFamily="bold" isNumeric>
                   {movimentacao.tipo == "Estoque" ? "-" : "+"}R${" "}
                   {movimentacao.valortotal}
                 </Td>

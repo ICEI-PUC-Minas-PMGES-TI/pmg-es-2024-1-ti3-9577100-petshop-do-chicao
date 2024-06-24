@@ -11,9 +11,6 @@ import {
   Button,
   ChakraProvider,
   Flex,
-  Input,
-  InputGroup,
-  InputRightElement,
   SimpleGrid,
   Spacer,
   Table,
@@ -27,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import { theme } from "../theme";
 import axios from "axios";
-import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import FormFuncionarios from "@/componentes/FormFuncionarios";
 import CadastroFuncionarios from "./cadastro/page";
@@ -134,12 +130,6 @@ export default function ListaFuncionarios() {
   return (
     <ChakraProvider theme={theme}>
       <Flex marginBottom="15px">
-        <InputGroup width="auto">
-          <Input placeholder="Pesquisar" />
-          <InputRightElement pointerEvents="none">
-            <SearchIcon />
-          </InputRightElement>
-        </InputGroup>
         <Spacer />
         <Button onClick={onCreateOpen}>Novo Funcionário</Button>
       </Flex>

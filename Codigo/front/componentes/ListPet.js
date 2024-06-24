@@ -44,10 +44,6 @@ export default function Clientes() {
     return (
         <Container maxW='auto'>
             <Flex marginBottom='15px'>
-                <Flex minWidth='max-content' alignItems='center'>
-                    <Input placeholder='Search' borderRight='0px' borderRadius='lg' borderRightRadius='0px' />
-                    <IconButton backgroundColor='white' aria-label='Search database' border='1px' borderLeft='0px' borderColor='gray.200' borderRadius='lg' borderLeftRadius='0px' icon={<SearchIcon />} />
-                </Flex>
                 <Spacer />
                 <Button colorScheme='red' size='md' borderRadius='lg' onClick={onOpen}>
                     Novo Pet

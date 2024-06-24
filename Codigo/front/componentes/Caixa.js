@@ -8,9 +8,6 @@ import {
   Td,
   TableContainer,
   ChakraProvider,
-  InputGroup,
-  Input,
-  InputRightElement,
   Spacer,
   Button,
   Flex,
@@ -22,13 +19,15 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogCloseButton,
+  Text,
+  Center,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { SearchIcon } from "@chakra-ui/icons";
 import { theme } from "@/app/theme";
 import ListaMovimentacoes from "./ListaMovimentacoes";
 
 export default function Caixa() {
+  const [saldo, setSaldo] = useState(0);
   const [caixaAberto, setCaixaAberto] = useState(null);
   const [caixas, setCaixas] = useState([]);
   const [caixaSelecionado, setCaixaSelecionado] = useState(null);
@@ -65,6 +64,9 @@ export default function Caixa() {
         .get("http://localhost:8081/caixa")
         .then(function (response) {
           setCaixas(response.data.reverse());
+          setSaldo(
+            response.data.reduce((acc, cur) => acc + cur["valortotal"], 0)
+          );
         })
         .catch(function (error) {
           console.log(error);
@@ -97,6 +99,7 @@ export default function Caixa() {
   }
 
   function handleCaixaClick(caixa) {
+    console.log(caixa);
     setCaixaSelecionado(caixa);
     onCaixaOpen();
   }
@@ -116,16 +119,17 @@ export default function Caixa() {
   return (
     <ChakraProvider theme={theme}>
       <Flex marginBottom="15px">
-        <InputGroup width="auto">
-          <Input placeholder="Pesquisar" />
-          <InputRightElement pointerEvents="none">
-            <SearchIcon />
-          </InputRightElement>
-        </InputGroup>
+        <Center>
+          <Text fontSize="md" fontWeight="bold">
+            Saldo Atual:
+          </Text>
+          <Text marginLeft={2} color={saldo >= 0 ? "green" : "red"}>
+            {saldo < 0 ? "-" : ""}R$ {Math.abs(saldo)}
+          </Text>
+        </Center>
         <Spacer />
         <ButtonCondition isOpen={caixaAberto} />
       </Flex>
-
       <TableContainer
         border="1px"
         borderColor="gray.200"
@@ -151,8 +155,11 @@ export default function Caixa() {
                     : new Date(caixa.datafechamento).toLocaleString()}
                 </Td>
                 <Td>{caixa.isopen == 0 ? "Fechado" : "Aberto"}</Td>
-                <Td isNumeric>
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(caixa.valortotal)}
+                <Td color={caixa.valortotal > 0 ? "green" : "red"} isNumeric>
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(caixa.valortotal)}
                 </Td>
               </Tr>
             ))}
@@ -214,10 +221,20 @@ export default function Caixa() {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <AlertDialog isOpen={isCaixaOpen} onClose={onCaixaClose} isCentered>
+      <AlertDialog
+        isOpen={isCaixaOpen}
+        onClose={onCaixaClose}
+        size="3xl"
+        isCentered
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>Caixa</AlertDialogHeader>
+            <AlertDialogHeader>
+              Dados do Caixa -{" "}
+              {caixaSelecionado != null
+                ? new Date(caixaSelecionado.dataabertura).toLocaleDateString()
+                : ""}
+            </AlertDialogHeader>
             <AlertDialogCloseButton />
             <AlertDialogBody>
               <ListaMovimentacoes caixa={caixaSelecionado} />

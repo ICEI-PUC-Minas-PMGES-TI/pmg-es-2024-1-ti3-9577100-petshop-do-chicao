@@ -82,6 +82,7 @@ export default function CadastroFuncionarios() {
       .then((response) => {
         console.log("Resposta do backend:", response.data);
         setForm(initialState);
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Erro ao enviar formulário:", error);
