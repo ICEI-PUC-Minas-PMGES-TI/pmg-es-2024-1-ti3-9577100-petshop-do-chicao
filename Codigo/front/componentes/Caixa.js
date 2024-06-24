@@ -151,7 +151,9 @@ export default function Caixa() {
                     : new Date(caixa.datafechamento).toLocaleString()}
                 </Td>
                 <Td>{caixa.isopen == 0 ? "Fechado" : "Aberto"}</Td>
-                <Td isNumeric>R$ {caixa.valortotal}</Td>
+                <Td isNumeric>
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(caixa.valortotal)}
+                </Td>
               </Tr>
             ))}
           </Tbody>

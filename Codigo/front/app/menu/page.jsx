@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Grid,
@@ -12,15 +12,15 @@ import {
 import { mode } from "@chakra-ui/theme-tools";
 // Paginas //
 import Clientes from "@/componentes/Clientes";
-import Pets from "@/app/cadastro_pets/page";
-import Funcionarios from "../funcionarios/cadastro/page";
+import Pets from "@/app/cadastro_pets/page"; // Verifique o caminho
+import Funcionarios from "@/app/funcionarios/cadastro/page"; // Verifique o caminho
 import Logo from "@/app/menu/logoPet.jpg";
 import Image from "next/image";
-import ListaFuncionarios from "../funcionarios/page";
+import ListaFuncionarios from "@/app/funcionarios/page"; // Verifique o caminho
 import Agendamentos from "@/componentes/Agendamentos";
-import Estoque from "../estoque/page";
-import Vendas from "../vendas/page";
-import Caixa from "../caixa/page";
+import Estoque from "@/app/estoque/page"; // Verifique o caminho
+import Vendas from "@/app/vendas/page"; // Verifique o caminho
+import Caixa from "@/app/caixa/page"; // Verifique o caminho
 
 const theme = extendTheme({
   styles: {
@@ -44,8 +44,16 @@ const theme = extendTheme({
 function App() {
   const [currentScreen, setCurrentScreen] = useState("caixa");
 
+  useEffect(() => {
+    const savedScreen = localStorage.getItem("currentScreen");
+    if (savedScreen) {
+      setCurrentScreen(savedScreen);
+    }
+  }, []);
+
   const handleScreenChange = (screen) => {
     setCurrentScreen(screen);
+    localStorage.setItem("currentScreen", screen);
   };
 
   return (

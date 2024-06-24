@@ -741,8 +741,7 @@ app.put("/caixa/fechar", (req, res) => {
   });
 });
 
-app.put("/caixa/alterarvalortotal", (req, res) => {
-  const { valor } = req.body;
+app.put("/caixa/atualizarvalortotal", (req, res) => {
   const sqlEncontrarCaixaAberto = "SELECT * FROM caixa WHERE isopen IS true";
 
   db.query(sqlEncontrarCaixaAberto, (err, result) => {
@@ -750,15 +749,29 @@ app.put("/caixa/alterarvalortotal", (req, res) => {
       console.error("Erro ao procurar caixa aberto:", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
+    if (result.length === 0) {
+      return res.status(400).json({ error: "Nenhum caixa aberto encontrado" });
+    }
+
     const caixaAberto = result[0];
-    const valortotal = caixaAberto.valortotal + valor;
-    const sqlAtualizarValorTotal = "UPDATE caixa SET valortotal = ? WHERE id = ?";
-    db.query(sqlAtualizarValorTotal, [valortotal, caixaAberto.id], (err, result) => {
+    const idCaixa = caixaAberto.id;
+
+    const sqlEncontrarVendas = "SELECT SUM(valortotal) as totalVendas FROM vendas WHERE idcaixa = ?";
+    db.query(sqlEncontrarVendas, [idCaixa], (err, result) => {
       if (err) {
-        console.error("Erro ao atualizar valor total:", err);
+        console.error("Erro ao procurar vendas:", err);
         return res.status(500).json({ error: "Erro interno do servidor" });
       }
-      return res.status(200).json({ message: "Valor total atualizado com sucesso!" });
+
+      const totalVendas = result[0].totalVendas || 0;
+      const sqlAtualizarValorTotal = "UPDATE caixa SET valortotal = ? WHERE id = ?";
+      db.query(sqlAtualizarValorTotal, [totalVendas, idCaixa], (err, result) => {
+        if (err) {
+          console.error("Erro ao atualizar valor total:", err);
+          return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+        return res.status(200).json({ message: "Valor total atualizado com sucesso!" });
+      });
     });
   });
 });

@@ -44,17 +44,17 @@ export default function Vendas() {
 
         const vendasFormatadas = response.data
           ? response.data.map((venda) => ({
-              ...venda,
-              dataFormatada: new Date(venda.data).toLocaleDateString(),
-              horaFormatada: new Date(venda.data).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }),
-              valorFormatado: venda.valortotal.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }), // Formata o valor total
-            }))
+            ...venda,
+            dataFormatada: new Date(venda.data).toLocaleDateString(),
+            horaFormatada: new Date(venda.data).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            valorFormatado: venda.valortotal.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }), // Formata o valor total
+          }))
           : [];
         setVendas(vendasFormatadas);
       } catch (error) {
@@ -111,22 +111,17 @@ export default function Vendas() {
         setIdCliente("");
         setTipoPagamento("");
         setItensVenda([]);
-        const valor = itensVenda.reduce(
-          (acc, cur) => acc + cur["preco"] * cur["qtde"],
-          0
-        );
-        console.log(valor);
+
         axios
-          .put("http://localhost:8081/caixa/alterarvalortotal", {
-            valor: valor,
-          })
+          .put("http://localhost:8081/caixa/atualizarvalortotal")
           .then(() => {
+            console.log("Valor total do caixa atualizado com sucesso!");
             window.location.reload();
           })
           .catch((error) => {
-            console.error("Erro ao enviar formulário:", error);
+            console.error("Erro ao atualizar valor do caixa:", error);
           });
-        window.location.reload();
+
         onClose();
       })
       .catch((error) => {
