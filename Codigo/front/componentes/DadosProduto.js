@@ -110,7 +110,7 @@ export default function DadosProduto({ produto }) {
             <Input
               borderRadius="lg"
               placeholder="Valor de Compra"
-              name="preco"
+              name="valorcompra"
               value={formData.valorcompra}
               onChange={handleInputChange}
             />
