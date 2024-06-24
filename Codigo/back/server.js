@@ -702,12 +702,12 @@ app.get("/caixa/movimentacoes/:idcaixa", (req, res) => {
                 SELECT v.tipopagamento as descricao, 'Venda' AS tipo, v.data, v.valortotal 
                   FROM caixa c 
                 JOIN vendas v ON v.idcaixa = c.id 
-                  WHERE c.id = 6
+                  WHERE c.id = ?
               UNION ALL
                 SELECT p.produto_descricao as descricao, 'Estoque' AS tipo, p.data, p.valortotalcompra 
                   FROM caixa c 
                       JOIN products p ON p.idcaixa = c.id 
-                WHERE c.id = 6
+                WHERE c.id = ?
               ) a ORDER by data desc`;
   
   db.query(sql, [idcaixa, idcaixa], (err, results) => {

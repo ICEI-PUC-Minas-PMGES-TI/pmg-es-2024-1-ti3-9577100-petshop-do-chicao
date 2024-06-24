@@ -99,7 +99,6 @@ export default function Caixa() {
   }
 
   function handleCaixaClick(caixa) {
-    console.log(caixa);
     setCaixaSelecionado(caixa);
     onCaixaOpen();
   }
