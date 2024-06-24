@@ -187,7 +187,7 @@ app.get("/vendas/:id", (req, res) => {
 });
 
 app.post("/vendas", (req, res) => {
-  const { data, idcliente, tipopagamento, itens } = req.body;
+  const { data, idcliente, tipopagamento, idcaixa, itens } = req.body;
 
   let valortotal = 0;
 
@@ -214,8 +214,8 @@ app.post("/vendas", (req, res) => {
   // Aguarda todas as promessas serem resolvidas
   Promise.all(promises)
       .then(() => {
-        const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento) VALUES (?, ?, ?, ?)";
-        db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento], (err, result) => {
+        const sqlVenda = "INSERT INTO vendas (data, idcliente, valortotal, tipopagamento, idcaixa) VALUES (?, ?, ?, ?, ?)";
+        db.query(sqlVenda, [data, idcliente, valortotal, tipopagamento, idcaixa], (err, result) => {
           if (err) {
             console.error("Erro ao cadastrar venda:", err);
             return res.status(500).json({ error: "Erro interno do servidor" });
@@ -669,13 +669,12 @@ app.delete("/caixa/:id", (req, res) => {
 });
 
 app.get("/caixa/aberto", (req, res) => {
-  const sql = "SELECT * FROM caixa WHERE isopen IS true";
+  const sql = "SELECT id FROM caixa WHERE isopen IS true";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Erro ao buscar caixa aberto:", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
-    console.log("result", results);
     return res.status(200).json(results);
   });
 });
@@ -731,4 +730,15 @@ app.put("/caixa/fechar", (req, res) => {
 
 app.listen(8081, () => {
   console.log(`Server is running on port 8081.`);
+  console.log(`
+
+    ██████╗ ███████╗████████╗███████╗██╗  ██╗ ██████╗ ██████╗     ██████╗  ██████╗      ██████╗██╗  ██╗██╗ ██████╗ █████╗  ██████╗ 
+    ██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║  ██║██╔═══██╗██╔══██╗    ██╔══██╗██╔═══██╗    ██╔════╝██║  ██║██║██╔════╝██╔══██╗██╔═══██╗
+    ██████╔╝█████╗     ██║   ███████╗███████║██║   ██║██████╔╝    ██║  ██║██║   ██║    ██║     ███████║██║██║     ███████║██║   ██║
+    ██╔═══╝ ██╔══╝     ██║   ╚════██║██╔══██║██║   ██║██╔═══╝     ██║  ██║██║   ██║    ██║     ██╔══██║██║██║     ██╔══██║██║   ██║
+    ██║     ███████╗   ██║   ███████║██║  ██║╚██████╔╝██║         ██████╔╝╚██████╔╝    ╚██████╗██║  ██║██║╚██████╗██║  ██║╚██████╔╝
+    ╚═╝     ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝         ╚═════╝  ╚═════╝      ╚═════╝╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ 
+                                                                                                                                   
+    
+        `)
 });

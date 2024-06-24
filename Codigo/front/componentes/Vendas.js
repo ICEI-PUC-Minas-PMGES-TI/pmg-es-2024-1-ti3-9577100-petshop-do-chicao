@@ -29,12 +29,13 @@ export default function Vendas() {
   const [vendaSelecionada, setVendaSelecionada] = useState(null);
   const [isOpenDadosVenda, setIsOpenDadosVenda] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure({
-    onClose: () => handleCancelVenda(), // Chama a função handleCancelVenda ao fechar
+    onClose: () => handleCancelVenda(), 
   });
   const cancelRef = useRef();
   const [idCliente, setIdCliente] = useState("");
   const [tipoPagamento, setTipoPagamento] = useState("");
   const [itensVenda, setItensVenda] = useState([]);
+  const [idCaixaAberto, setIdCaixaAberto] = useState(null);
 
   useEffect(() => {
     const fetchVendas = async () => {
@@ -64,6 +65,27 @@ export default function Vendas() {
     fetchVendas();
   }, []);
 
+  useEffect(() => {
+    const fetchCaixaAberto = async () => {
+      try {
+        const response = await axios.get("http://localhost:8081/caixa/aberto");
+        if (response.data.length > 0) {
+          
+          const idCaixa = response.data[0].id;
+          setIdCaixaAberto(idCaixa);
+        } else {
+          console.log("Nenhum caixa aberto encontrado.");
+          setIdCaixaAberto(null);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar caixa aberto:", error);
+        setIdCaixaAberto(null);
+      }
+    };
+
+    fetchCaixaAberto();
+  }, []);
+
   const handleVendaClick = (venda) => {
     setVendaSelecionada(venda);
     setIsOpenDadosVenda(true);
@@ -74,15 +96,16 @@ export default function Vendas() {
     setIsOpenDadosVenda(false);
   };
 
-  const handleSubmitVenda = () => {
+  const handleSubmitVenda = async () => {
     const dataHora = new Date();
     const dataHoraFormatada = dataHora.toISOString().slice(0, 19).replace('T', ' '); // Formato 'YYYY-MM-DD HH:MM:SS'
 
     const dadosVenda = {
-      data: dataHoraFormatada, // Usa o formato compatível com MySQL
+      data: dataHoraFormatada,
       idcliente: parseInt(idCliente),
       tipopagamento: tipoPagamento,
       itens: itensVenda,
+      idcaixa: idCaixaAberto
     };
 
     axios
@@ -92,7 +115,7 @@ export default function Vendas() {
         setIdCliente("");
         setTipoPagamento("");
         setItensVenda([]);
-        onClose(); // Fecha o AlertDialog após a venda ser efetuada
+        onClose(); 
       })
       .catch((error) => {
         console.error("Erro ao enviar formulário:", error);
