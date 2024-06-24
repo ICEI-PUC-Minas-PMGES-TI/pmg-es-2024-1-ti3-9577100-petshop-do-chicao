@@ -64,7 +64,7 @@ export default function Caixa() {
       axios
         .get("http://localhost:8081/caixa")
         .then(function (response) {
-          setCaixas(response.data);
+          setCaixas(response.data.reverse());
         })
         .catch(function (error) {
           console.log(error);

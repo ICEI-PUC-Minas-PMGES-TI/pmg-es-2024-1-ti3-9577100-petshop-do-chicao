@@ -37,6 +37,7 @@ app.get("/products", (req, res) => {
     return res.status(200).json(results);
   });
 });
+
 app.get("/products/:id", (req, res) => {
   const { id } = req.params;
   const sql = "SELECT * FROM products WHERE id = ?";
@@ -48,17 +49,17 @@ app.get("/products/:id", (req, res) => {
     return res.status(200).json(results);
   });
 });
-app.post("/products", (req, res) => {
-  const { produto_descricao, preco, qtde } = req.body;
 
-  const sql =
-      "INSERT INTO products ( produto_descricao, preco, qtde) VALUES (?, ?, ?)";
+app.post("/products", (req, res) => {
+  const { produto_descricao, preco, qtde, valorcompra, idcaixa } = req.body;
+
+  const sql = "INSERT INTO products ( produto_descricao, preco, qtde, valorcompra, idcaixa) VALUES (?, ?, ?, ?, ?)";
   db.query(
       sql,
-      [produto_descricao, preco, qtde],
+      [produto_descricao, preco, qtde, valorcompra, idcaixa],
       (err, result) => {
         if (err) {
-          console.error("Erro ao cadastrar funcionário:", err);
+          console.error("Erro ao cadastrar produto:", err);
           return res.status(500).json({ error: "Erro interno do servidor" });
         }
         return res
@@ -82,10 +83,10 @@ app.delete("/products/:id", (req, res) => {
 
 app.put("/products/:id", (req, res) => {
   const { id } = req.params;
-  const { produto_descricao, preco, qtde } = req.body;
+  const { produto_descricao, preco, qtde, valorcompra } = req.body;
   const sql =
-      "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ? WHERE id = ?";
-  db.query(sql, [produto_descricao, preco, qtde, id], (err, result) => {
+      "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ?, valorcompra = ? WHERE id = ?";
+  db.query(sql, [produto_descricao, preco, qtde, valorcompra, id], (err, result) => {
     if (err) {
       console.error("Erro ao atualizar produto:", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
@@ -694,14 +695,26 @@ app.get("/caixa/aberto", (req, res) => {
 //   });
 // });
 
-app.get("/caixa/:idcaixa", (req, res) => {
+app.get("/caixa/vendas/:idcaixa", (req, res) => {
   const { idcaixa } = req.params;
-  const sql = `
-    SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = ?;
-  `;
+  const sql = "SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = ?";
+  
   db.query(sql, [idcaixa], (err, results) => {
     if (err) {
       console.error("Erro ao buscar vendas do caixa:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
+});
+
+app.get("/caixa/produtos/:idcaixa", (req, res) => {
+  const { idcaixa } = req.params;
+  const sql = "SELECT p.id, p.produto_descricao, p.preco, p.qtde, p.data FROM caixa c JOIN products p ON p.idcaixa = c.id WHERE c.id = ?"
+
+  db.query(sql, [idcaixa], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar produtos do caixa:", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
     }
     return res.status(200).json(results);
