@@ -15,37 +15,13 @@ export default function ListaMovimentacoes({ caixa }) {
 
   useEffect(() => {
     return () => {
-      const movs = [];
       axios
-        .get(`http://localhost:8081/caixa/vendas/${caixa.id}`)
+        .get(`http://localhost:8081/caixa/movimentacoes/${caixa.id}`)
         .then((response) => {
-          response.data.map((mov) =>
-            movs.push({
-              tipo: "Venda",
-              valortotal: mov.valortotal,
-              descricao: mov.tipopagamento,
-              data: mov.data,
-            })
-          );
+          setMovimentacoes(response.data);
         })
         .catch((error) => {
-          console.error("Erro ao abrir caixa:", error);
-        });
-      axios
-        .get(`http://localhost:8081/caixa/produtos/${caixa.id}`)
-        .then((response) => {
-          response.data.map((mov) =>
-            movs.push({
-              tipo: "Estoque",
-              valortotal: mov.valorcompra * mov.qtde,
-              descricao: mov.produto_descricao,
-              data: mov.data,
-            })
-          );
-          setMovimentacoes(movs);
-        })
-        .catch((error) => {
-          console.error("Erro ao abrir caixa:", error);
+          console.error("Erro ao listar movimentações:", error);
         });
     };
   }, []);

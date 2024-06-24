@@ -51,12 +51,12 @@ app.get("/products/:id", (req, res) => {
 });
 
 app.post("/products", (req, res) => {
-  const { produto_descricao, preco, qtde, valorcompra, idcaixa } = req.body;
+  const { produto_descricao, preco, qtde, qtdecompra, valorcompra, valortotalcompra, idcaixa } = req.body;
 
-  const sql = "INSERT INTO products ( produto_descricao, preco, qtde, valorcompra, idcaixa) VALUES (?, ?, ?, ?, ?)";
+  const sql = "INSERT INTO products ( produto_descricao, preco, qtde, qtdecompra, valorcompra, valortotalcompra, idcaixa) VALUES (?, ?, ?, ?, ?, ?, ?)";
   db.query(
       sql,
-      [produto_descricao, preco, qtde, valorcompra, idcaixa],
+      [produto_descricao, preco, qtde, qtdecompra, valorcompra, valortotalcompra, idcaixa],
       (err, result) => {
         if (err) {
           console.error("Erro ao cadastrar produto:", err);
@@ -83,10 +83,11 @@ app.delete("/products/:id", (req, res) => {
 
 app.put("/products/:id", (req, res) => {
   const { id } = req.params;
-  const { produto_descricao, preco, qtde, valorcompra } = req.body;
+  const { produto_descricao, preco, qtde, qtdecompra, valorcompra, valortotalcompra } = req.body;
+  console.log("id", id)
   const sql =
-      "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ?, valorcompra = ? WHERE id = ?";
-  db.query(sql, [produto_descricao, preco, qtde, valorcompra, id], (err, result) => {
+      "UPDATE products SET produto_descricao = ?, preco = ?, qtde = ?, qtdecompra = ?, valorcompra = ?, valortotalcompra = ? WHERE id = ?";
+  db.query(sql, [produto_descricao, preco, qtde, qtdecompra, valorcompra, valortotalcompra, id], (err, result) => {
     if (err) {
       console.error("Erro ao atualizar produto:", err);
       return res.status(500).json({ error: "Erro interno do servidor" });
@@ -695,6 +696,29 @@ app.get("/caixa/aberto", (req, res) => {
 //   });
 // });
 
+app.get("/caixa/movimentacoes/:idcaixa", (req, res) => {
+  const { idcaixa } = req.params;
+  const sql = `SELECT * FROM(
+                SELECT v.tipopagamento as descricao, 'Venda' AS tipo, v.data, v.valortotal 
+                  FROM caixa c 
+                JOIN vendas v ON v.idcaixa = c.id 
+                  WHERE c.id = 6
+              UNION ALL
+                SELECT p.produto_descricao as descricao, 'Estoque' AS tipo, p.data, p.valortotalcompra 
+                  FROM caixa c 
+                      JOIN products p ON p.idcaixa = c.id 
+                WHERE c.id = 6
+              ) a ORDER by data desc`;
+  
+  db.query(sql, [idcaixa, idcaixa], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar vendas do caixa:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    return res.status(200).json(results);
+  });
+});
+
 app.get("/caixa/vendas/:idcaixa", (req, res) => {
   const { idcaixa } = req.params;
   const sql = "SELECT v.id AS id, v.data, v.tipopagamento, v.valortotal FROM caixa c JOIN vendas v ON v.idcaixa = c.id WHERE c.id = ?";
@@ -710,7 +734,7 @@ app.get("/caixa/vendas/:idcaixa", (req, res) => {
 
 app.get("/caixa/produtos/:idcaixa", (req, res) => {
   const { idcaixa } = req.params;
-  const sql = "SELECT p.id, p.produto_descricao, p.preco, p.valorcompra, p.qtde, p.data FROM caixa c JOIN products p ON p.idcaixa = c.id WHERE c.id = ?"
+  const sql = "SELECT p.id, p.produto_descricao, p.preco, p.valorcompra, p.qtde, p.qtdecompra, p.data, p.valortotalcompra FROM caixa c JOIN products p ON p.idcaixa = c.id WHERE c.id = ?"
 
   db.query(sql, [idcaixa], (err, results) => {
     if (err) {
@@ -756,14 +780,16 @@ app.put("/caixa/atualizarvalortotal", (req, res) => {
     const caixaAberto = result[0];
     const idCaixa = caixaAberto.id;
 
-    const sqlEncontrarVendas = "SELECT SUM(valortotal) as totalVendas FROM vendas WHERE idcaixa = ?";
-    db.query(sqlEncontrarVendas, [idCaixa], (err, result) => {
+    const sqlEncontrarMovimentacoes = `SELECT
+                                        (SELECT IFNULL(SUM(valortotal), 0) FROM vendas as v WHERE v.idcaixa = ?) -
+                                        (SELECT IFNULL(SUM(valortotalcompra), 0) FROM products as p WHERE p.idcaixa = ?) 
+                                      AS totalMovimentacoes`
+    db.query(sqlEncontrarMovimentacoes, [idCaixa, idCaixa], (err, result) => {
       if (err) {
-        console.error("Erro ao procurar vendas:", err);
+        console.error("Erro ao procurar movimentações:", err);
         return res.status(500).json({ error: "Erro interno do servidor" });
       }
-
-      const totalVendas = result[0].totalVendas || 0;
+      const totalVendas = result[0].totalMovimentacoes || 0;
       const sqlAtualizarValorTotal = "UPDATE caixa SET valortotal = ? WHERE id = ?";
       db.query(sqlAtualizarValorTotal, [totalVendas, idCaixa], (err, result) => {
         if (err) {

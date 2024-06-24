@@ -27,6 +27,7 @@ export default function DadosProduto({ produto }) {
         preco: produto.preco || "",
         valorcompra: produto.valorcompra || "",
         qtde: produto.qtde || "",
+        qtdecompra: produto.qtdecompra || "",
       });
     } else {
       clearForm();
@@ -40,6 +41,7 @@ export default function DadosProduto({ produto }) {
       preco: "",
       valorcompra: "",
       qtde: "",
+      qtdecompra: "",
     });
   };
 
@@ -53,13 +55,16 @@ export default function DadosProduto({ produto }) {
 
   const handleUpdate = (e) => {
     e.preventDefault();
+    console.log("produto", produto);
 
     const dadosProduto = {
       id: formData.id,
       produto_descricao: formData.produto_descricao,
       preco: formData.preco,
-      valorcompra: formData.valorcompra,
       qtde: formData.qtde,
+      qtdecompra: formData.qtdecompra,
+      valorcompra: formData.valorcompra,
+      valortotalcompra: formData.valorcompra * formData.qtdecompra,
     };
 
     axios
@@ -90,19 +95,19 @@ export default function DadosProduto({ produto }) {
   return (
     <Container>
       <form onSubmit={handleUpdate}>
+        <GridItem>
+          <Heading marginTop={3} marginBottom={3} as="h5" size="sm">
+            Descrição:
+          </Heading>
+          <Input
+            borderRadius="lg"
+            placeholder="Descrição"
+            name="produto_descricao"
+            value={formData.produto_descricao}
+            onChange={handleInputChange}
+          />
+        </GridItem>
         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-          <GridItem>
-            <Heading marginTop={3} marginBottom={3} as="h5" size="sm">
-              Descrição:
-            </Heading>
-            <Input
-              borderRadius="lg"
-              placeholder="Descrição"
-              name="produto_descricao"
-              value={formData.produto_descricao}
-              onChange={handleInputChange}
-            />
-          </GridItem>
           <GridItem>
             <Heading marginTop={3} marginBottom={3} as="h5" size="sm">
               Valor de Compra:
@@ -117,13 +122,13 @@ export default function DadosProduto({ produto }) {
           </GridItem>
           <GridItem>
             <Heading marginTop={3} marginBottom={3} as="h5" size="sm">
-              Quantidade:
+              Quantidade Compra:
             </Heading>
             <Input
               borderRadius="lg"
-              placeholder="Quantidade"
-              name="qtde"
-              value={formData.qtde}
+              placeholder="Quantidade de Compra"
+              name="qtdecompra"
+              value={formData.qtdecompra}
               onChange={handleInputChange}
             />
           </GridItem>
@@ -136,6 +141,18 @@ export default function DadosProduto({ produto }) {
               placeholder="Valor de Venda"
               name="preco"
               value={formData.preco}
+              onChange={handleInputChange}
+            />
+          </GridItem>
+          <GridItem>
+            <Heading marginTop={3} marginBottom={3} as="h5" size="sm">
+              Quantidade Venda:
+            </Heading>
+            <Input
+              borderRadius="lg"
+              placeholder="Quantidade de Venda"
+              name="qtde"
+              value={formData.qtde}
               onChange={handleInputChange}
             />
           </GridItem>

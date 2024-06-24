@@ -15,6 +15,7 @@ export default function FormProduto() {
     produto_descricao: "",
     preco: "",
     qtde: "",
+    qtdecompra: "",
     valorcompra: "",
   };
 
@@ -51,7 +52,9 @@ export default function FormProduto() {
       produto_descricao: formData.produto_descricao,
       preco: formData.preco,
       qtde: formData.qtde,
+      qtdecompra: formData.qtde,
       valorcompra: formData.valorcompra,
+      valortotalcompra: formData.valorcompra * formData.qtde,
       idcaixa: caixaAberto.id,
     };
 
@@ -60,14 +63,13 @@ export default function FormProduto() {
       .then((response) => {
         setFormData(initialState);
         axios
-          .put("http://localhost:8081/caixa/alterarvalortotal", {
-            valor: formData.valorcompra * formData.qtde * -1,
-          })
+          .put("http://localhost:8081/caixa/atualizarvalortotal")
           .then(() => {
+            console.log("Valor total do caixa atualizado com sucesso!");
             window.location.reload();
           })
           .catch((error) => {
-            console.error("Erro ao enviar formulário:", error);
+            console.error("Erro ao atualizar valor do caixa:", error);
           });
         window.location.reload();
       })
@@ -129,7 +131,6 @@ export default function FormProduto() {
             />
           </GridItem>
         </Grid>
-
         <Grid
           marginTop={5}
           marginBottom={5}
