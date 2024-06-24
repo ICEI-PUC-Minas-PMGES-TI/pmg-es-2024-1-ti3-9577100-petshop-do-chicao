@@ -1,31 +1,28 @@
 cff-version: 1.0.1
 message: Please cite this software using these metadata.
-title: 
+title: Petshop do Chicão
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names:
+  - family-names: Santos Hyodo
+    given-names: André Teiichi
+  - family-names: Martins Zagnoli Silva
+    given-names: Arthur
+  - family-names: Pereira de Oliveira
+    given-names: Gustavo
+  - family-names: Carvalho de Oliveira
+    given-names: Marcus Vinícius
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Ribeiro de Souza
+    given-names: Joana Gabriela
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Soares de Andrade
+    given-names: Michelle Hanne
 keywords:
-  - 
-  - 
-repository-code: 
+  - engenharia software
+  - puc minas
+  - desenvolvimento
+repository-code: https://github.com/ICEI-PUC-Minas-PMGES-TI/pmg-es-2024-1-ti3-9577100-petshop-do-chicao
 license: CC-BY-4.0
 version: 1.0.0
-date-released: 2022-07-14
+date-released: 2024-06-24
