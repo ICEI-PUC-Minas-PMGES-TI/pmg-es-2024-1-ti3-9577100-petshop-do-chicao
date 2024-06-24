@@ -58,8 +58,17 @@ export default function FormProduto() {
     axios
       .post("http://localhost:8081/products", dadosProduto)
       .then((response) => {
-        console.log("Resposta do backend:", response.data);
         setFormData(initialState);
+        axios
+          .put("http://localhost:8081/caixa/alterarvalortotal", {
+            valor: formData.valorcompra * formData.qtde * -1,
+          })
+          .then(() => {
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar formulário:", error);
+          });
         window.location.reload();
       })
       .catch((error) => {

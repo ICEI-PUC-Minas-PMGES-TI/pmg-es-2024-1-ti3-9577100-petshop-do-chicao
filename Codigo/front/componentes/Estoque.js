@@ -64,17 +64,17 @@ export default function Estoque() {
                 <Table variant='striped' colorScheme='gray'>
                     <Thead>
                         <Tr>
-                            <Th>ID</Th>
-                            <Th>Descrição</Th>
-                            <Th>Preço</Th>
+                            <Th>Produto</Th>
+                            <Th>Valor de Compra</Th>
+                            <Th>Valor de Venda</Th>
                             <Th isNumeric>Quantidade</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {produtos.map((produto, index) => (
                             <Tr key={index} onClick={() => handleProdutoClick(produto)}>
-                                <Td width='auto'>{produto.id}</Td>
                                 <Td width='auto'>{produto.produto_descricao}</Td>
+                                <Td width='auto'>R$ {produto.valorcompra}</Td>
                                 <Td width='auto'>R$ {produto.preco}</Td>
                                 <Td isNumeric width='auto'>{produto.qtde}</Td>
                             </Tr>

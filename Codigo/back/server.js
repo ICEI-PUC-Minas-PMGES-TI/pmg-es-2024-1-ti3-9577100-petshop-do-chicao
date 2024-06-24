@@ -710,7 +710,7 @@ app.get("/caixa/vendas/:idcaixa", (req, res) => {
 
 app.get("/caixa/produtos/:idcaixa", (req, res) => {
   const { idcaixa } = req.params;
-  const sql = "SELECT p.id, p.produto_descricao, p.preco, p.qtde, p.data FROM caixa c JOIN products p ON p.idcaixa = c.id WHERE c.id = ?"
+  const sql = "SELECT p.id, p.produto_descricao, p.preco, p.valorcompra, p.qtde, p.data FROM caixa c JOIN products p ON p.idcaixa = c.id WHERE c.id = ?"
 
   db.query(sql, [idcaixa], (err, results) => {
     if (err) {
@@ -737,6 +737,28 @@ app.put("/caixa/fechar", (req, res) => {
         return res.status(500).json({ error: "Erro interno do servidor" });
       }
       return res.status(200).json({ message: "Caixa fechado com sucesso!" });
+    });
+  });
+});
+
+app.put("/caixa/alterarvalortotal", (req, res) => {
+  const { valor } = req.body;
+  const sqlEncontrarCaixaAberto = "SELECT * FROM caixa WHERE isopen IS true";
+
+  db.query(sqlEncontrarCaixaAberto, (err, result) => {
+    if (err) {
+      console.error("Erro ao procurar caixa aberto:", err);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+    const caixaAberto = result[0];
+    const valortotal = caixaAberto.valortotal + valor;
+    const sqlAtualizarValorTotal = "UPDATE caixa SET valortotal = ? WHERE id = ?";
+    db.query(sqlAtualizarValorTotal, [valortotal, caixaAberto.id], (err, result) => {
+      if (err) {
+        console.error("Erro ao atualizar valor total:", err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+      return res.status(200).json({ message: "Valor total atualizado com sucesso!" });
     });
   });
 });

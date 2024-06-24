@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Container, Input, Grid, GridItem, Button, Select, Textarea} from '@chakra-ui/react';
+import {Container, Input, Grid, GridItem, Button, Select, Textarea, SimpleGrid} from '@chakra-ui/react';
 import axios from 'axios';
 import { Heading } from '@chakra-ui/react';
 import DeleteButton from './DeleteButton';
@@ -165,7 +165,6 @@ export default function Dadosagendamentos({ agendamento }) {
             });
     };
 
-
     return (
         <Container>
             <Heading pb={10} pt={10} fontSize={40} textAlign={'center'}>
@@ -237,6 +236,14 @@ export default function Dadosagendamentos({ agendamento }) {
                             onChange={handleDadosagendamentosChange}
                         />
                     </GridItem>
+                    <GridItem>
+                        <Select placeholder="Pagamento">
+                            <option>Cartão de Crédito</option>
+                            <option>Cartão de Débito</option>
+                            <option>Dinheiro</option>
+                            <option>Pix</option>
+                        </Select>
+                    </GridItem>
 
                 </Grid>
 
@@ -254,3 +261,5 @@ export default function Dadosagendamentos({ agendamento }) {
         </Container>
     );
 }
+
+
