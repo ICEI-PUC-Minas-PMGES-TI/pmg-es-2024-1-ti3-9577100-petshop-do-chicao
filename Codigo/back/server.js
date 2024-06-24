@@ -162,7 +162,7 @@ app.delete("/clientes/:id", (req, res) => {
 });
 
 app.get("/vendas", (req, res) => {
-  const sql = "SELECT * FROM vendas";
+  const sql = "SELECT * FROM vendas ORDER BY id DESC";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Erro ao buscar vendas:", err);
